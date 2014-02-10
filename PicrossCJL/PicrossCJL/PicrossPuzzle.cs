@@ -165,6 +165,26 @@ namespace PicrossCJL
 
         public PuzzleState GetPuzzleState()
         {
+            Size s = Size;
+            int w = s.Width;
+            int h = s.Height;
+
+            // check each line
+            for (int y = 0; y < h; y++)
+            {
+                int[] value = LinesValues[y];
+                int currentRunIdx = 0;
+                int currentRunLength = 0;
+                for (int x = 0; x < w; x++)
+                {
+
+                }
+
+            }
+
+
+            // check each column
+
             return PuzzleState.Incomplete;
         }
         #endregion
