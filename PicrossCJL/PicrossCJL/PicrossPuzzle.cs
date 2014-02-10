@@ -13,6 +13,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Drawing.Imaging;
 
 namespace PicrossCJL
 {
@@ -103,23 +104,60 @@ namespace PicrossCJL
         /// </summary>
         /// <param name="img"></param>
         /// <param name="size"></param>
-        public PicrossPuzzle(Bitmap img, Size? size = null)
+        public PicrossPuzzle(Bitmap img, Size? size = null, int threshold = 128)
         {
-            this.LinesValues = this.BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img);
-            this.ColumnsValues = this.BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img);
+            this.LinesValues = this.BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
+            this.ColumnsValues = this.BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
         }
         #endregion
 
         #region Methods
+
+        unsafe private CellValue[,] BitmapToCellsValueArray(Bitmap bmp, int threshold)
+        {
+            CellValue[,] cells = new CellValue[bmp.Width, bmp.Height];
+            Rectangle r = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            BitmapData bmpData = bmp.LockBits(r, ImageLockMode.ReadWrite, bmp.PixelFormat);
+            IntPtr px = bmpData.Scan0;
+
+            int stride = bmpData.Stride;
+            int offset = stride - (bmp.Width * 4);
+            int average = 0;
+            byte* ptrPx = (byte*)px;
+
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    average = (ptrPx[0] + ptrPx[1] + ptrPx[2]) / 3;
+                    ptrPx += 4;
+                    cells[x, y] = (average >= threshold) ? CellValue.Filled : CellValue.Empty;
+                }
+                ptrPx += offset;
+            }
+
+            bmp.UnlockBits(bmpData);
+
+            return cells;
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        unsafe private int[][] BitmapToLinesValue(Bitmap bmp)
+        unsafe private int[][] BitmapToLinesValue(Bitmap bmp, int threshold)
         {
-            Rectangle r = new Rectangle();
+            CellValue[,] cells = this.BitmapToCellsValueArray(bmp, threshold);
+
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                for (int x = 0; x < bmp.Width; x++)
+                {
+
+                }
+            }
+
             
             return new int[0][];
         }
@@ -129,7 +167,7 @@ namespace PicrossCJL
         /// </summary>
         /// <param name="bmp"></param>
         /// <returns></returns>
-        private int[][] BitmapToColumnsValue(Bitmap bmp)
+        private int[][] BitmapToColumnsValue(Bitmap bmp, int threshold)
         {
             return new int[0][];
         }
