@@ -3,7 +3,7 @@
  * Authors : Damien L., Rejas C.,  Peiry J.
  * Date    : 2014-02-10
  * Desc.   : ---
- */ 
+ */
 
 using System;
 using System.Collections.Generic;
@@ -44,7 +44,7 @@ namespace PicrossCJL
         public CellValue[,] Cells
         {
             get { return this._cells; }
-            set { this._cells = value; } 
+            set { this._cells = value; }
         }
 
         public int[][] LinesValues
@@ -56,7 +56,7 @@ namespace PicrossCJL
         public int[][] ColumnsValues
         {
             get { return this._columnsValues; }
-            private set { this._columnsValues = value; } 
+            private set { this._columnsValues = value; }
         }
 
         public Size Size
@@ -74,7 +74,8 @@ namespace PicrossCJL
         /// PicrossPuzzle Constructor
         /// </summary>
         /// <param name="puzzle"></param>
-        public PicrossPuzzle(PicrossPuzzle puzzle) : this(puzzle.Cells, puzzle.LinesValues, puzzle.ColumnsValues)
+        public PicrossPuzzle(PicrossPuzzle puzzle)
+            : this(puzzle.Cells, puzzle.LinesValues, puzzle.ColumnsValues)
         { } // No code
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace PicrossCJL
         /// <param name="columnsValues"></param>
         public PicrossPuzzle(CellValue[,] cells, int[][] linesValues, int[][] columnsValues)
         {
-            this.Cells = cells;
+            this.Cells = (CellValue[,])cells.Clone();
             this.LinesValues = linesValues;
             this.ColumnsValues = columnsValues;
         }
@@ -158,7 +159,7 @@ namespace PicrossCJL
                 }
             }
 
-            
+
             return new int[0][];
         }
 
@@ -201,29 +202,150 @@ namespace PicrossCJL
             stream.Close();
         }
 
+        public PuzzleState CheckPuzzleLine(int lineNo)
+        {
+            Size s = Size;
+            int w = s.Width;
+            int h = s.Height;
+
+            int[] values = LinesValues[lineNo];
+            int nbValues = values.Length;
+            int currentRunIdx = -1;
+            int currentRunLength = 0;
+            CellValue previousCellValue = CellValue.Crossed;
+            CellValue currentCellValue;
+            for (int x = 0; x < w; x++)
+            {
+                currentCellValue = Cells[lineNo, x];
+                switch (currentCellValue)
+                {
+                    case CellValue.Empty:
+                        break;
+                    case CellValue.Filled:
+                        switch (previousCellValue)
+                        {
+                            case CellValue.Empty:
+                                break;
+                            case CellValue.Filled:
+                                currentRunLength += 1;
+                                if (currentRunLength > values[currentRunIdx])
+                                    return PuzzleState.Incorrect;
+                                break;
+                            case CellValue.Crossed:
+                                currentRunLength = 0;
+                                currentRunIdx += 1;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case CellValue.Crossed:
+                        switch (previousCellValue)
+                        {
+                            case CellValue.Empty:
+                                break;
+                            case CellValue.Filled:
+                                break;
+                            case CellValue.Crossed:
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+
+                /*
+
+                if (currentCellValue == CellValue.Filled)
+                {
+                    if (currentRunIdx == -1)
+                        currentRunIdx = 0;
+
+
+                    currentRunLength += 1;
+                    if (currentRunLength > values[currentRunIdx])
+                        return PuzzleState.Incorrect;
+                }
+                else if (currentCellValue == CellValue.Crossed)
+                {
+                    if (currentRunIdx > -1)
+                    {
+                        if (previousCellValue == CellValue.Filled)
+                        {
+                        }
+                    }
+                }
+                */
+
+                previousCellValue = currentCellValue;
+            }
+
+            if (currentRunIdx == currentRunLength || (currentRunIdx == currentRunLength - 1 && currentRunLength == values[currentRunIdx]))
+            {
+                return PuzzleState.Finished;
+            }
+
+            return PuzzleState.Incomplete;
+        }
+
+        public PuzzleState CheckPuzzleColumn(int columnNo)
+        {
+            return PuzzleState.Incomplete;
+        }
+
         public PuzzleState GetPuzzleState()
         {
             Size s = Size;
             int w = s.Width;
             int h = s.Height;
 
-            // check each line
-            for (int y = 0; y < h; y++)
-            {
-                int[] value = LinesValues[y];
-                int currentRunIdx = 0;
-                int currentRunLength = 0;
-                for (int x = 0; x < w; x++)
-                {
+            bool incorrect = false;
+            bool finished = true;
 
+            // first check each line
+            for (int y = 0; y < h && !incorrect && finished; y++)
+            {
+                switch (CheckPuzzleLine(y))
+                {
+                    case PuzzleState.Incorrect:
+                        incorrect = true;
+                        finished = false;
+                        break;
+                    case PuzzleState.Finished:
+                        break;
+                    case PuzzleState.Incomplete:
+                        finished = false;
+                        break;
+                    default:
+                        break;
                 }
 
             }
 
+            // then check each column
+            for (int x = 0; x < w && !incorrect && finished; x++)
+            {
+                switch (CheckPuzzleColumn(x))
+                {
+                    case PuzzleState.Incorrect:
+                        incorrect = true;
+                        finished = false;
+                        break;
+                    case PuzzleState.Finished:
+                        break;
+                    case PuzzleState.Incomplete:
+                        finished = false;
+                        break;
+                    default:
+                        break;
+                }
 
-            // check each column
+            }
 
-            return PuzzleState.Incomplete;
+            return incorrect ? PuzzleState.Incorrect : finished ? PuzzleState.Finished : PuzzleState.Incomplete;
         }
         #endregion
     }

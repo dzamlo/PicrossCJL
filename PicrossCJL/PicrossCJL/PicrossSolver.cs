@@ -13,13 +13,17 @@ namespace PicrossCJL
 
         }
 
-        bool Solve(PicrossPuzzle puzzle)
+        public bool Solve(PicrossPuzzle puzzle, int currentX = 0, int currentY  = 0)
         {
             //algo:
             //  backtracking, remplir ce dont est sur en fonction de l'état de la grille entre chauqe appel recursif
 
             //base case en fonction de puzzle.getgamestate
-
+            PicrossPuzzle.PuzzleState puzzleState = puzzle.GetPuzzleState();
+            if (puzzleState == PicrossPuzzle.PuzzleState.Finished)
+                return true;
+            else if (puzzleState == PicrossPuzzle.PuzzleState.Incorrect)
+                return true;
 
             Size s = puzzle.Size;
             int w = s.Width;
@@ -30,15 +34,16 @@ namespace PicrossCJL
             // essayer remplir la cellule, essayer de résoudre (appel recursif à solve)
             // si resolutuion ok -> fini
             // sinon  -> cellule crossed, essayer de remplir la prochiane, etc.
-            for (int x = 0; x < w; x++)
+            int y = currentY;
+            for (int x = currentX; x < w; x++)
             {
-                for (int y = 0; y < h; y++)
+                for (; y < h; y++)
                 {
                     if (puzzle.Cells[x, y] == PicrossPuzzle.CellValue.Empty)
                     {
                         puzzle.Cells[x, y] = PicrossPuzzle.CellValue.Filled;
                         PicrossPuzzle tmpPuzzle = new PicrossPuzzle(puzzle);
-                        if (Solve(tmpPuzzle))
+                        if (Solve(tmpPuzzle, x, y))
                         {
                             puzzle.Cells = tmpPuzzle.Cells;
                             return true;
@@ -46,6 +51,7 @@ namespace PicrossCJL
                         puzzle.Cells[x, y] = PicrossPuzzle.CellValue.Crossed;
                     }
                 }
+                y = 0;
             }
 
             return false;
