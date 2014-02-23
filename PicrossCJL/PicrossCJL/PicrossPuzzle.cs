@@ -212,6 +212,7 @@ namespace PicrossCJL
             int nbValues = values.Length;
             int currentRunIdx = -1;
             int currentRunLength = 0;
+            int emptyRunLength = 0;
             CellValue previousCellValue = CellValue.Crossed;
             CellValue currentCellValue;
             for (int x = 0; x < w; x++)
@@ -220,11 +221,28 @@ namespace PicrossCJL
                 switch (currentCellValue)
                 {
                     case CellValue.Empty:
+                        emptyRunLength += 1;
+                        switch (previousCellValue)
+                        {
+                            case CellValue.Empty:
+                                //TODO: complete
+
+                                break;
+                            case CellValue.Filled:
+                                //TODO: complete
+                                break;
+                            case CellValue.Crossed:
+                                //TODO: complete
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case CellValue.Filled:
                         switch (previousCellValue)
                         {
                             case CellValue.Empty:
+                                //TODO: complete
                                 break;
                             case CellValue.Filled:
                                 currentRunLength += 1;
@@ -238,47 +256,29 @@ namespace PicrossCJL
                             default:
                                 break;
                         }
+                        emptyRunLength = 0;
                         break;
                     case CellValue.Crossed:
                         switch (previousCellValue)
                         {
                             case CellValue.Empty:
+                                //TODO: complete
                                 break;
                             case CellValue.Filled:
+                                if (currentRunLength != values[currentRunIdx])
+                                    return PuzzleState.Incorrect;
                                 break;
                             case CellValue.Crossed:
+                                
                                 break;
                             default:
                                 break;
                         }
+                        emptyRunLength = 0;
                         break;
                     default:
                         break;
                 }
-
-
-                /*
-
-                if (currentCellValue == CellValue.Filled)
-                {
-                    if (currentRunIdx == -1)
-                        currentRunIdx = 0;
-
-
-                    currentRunLength += 1;
-                    if (currentRunLength > values[currentRunIdx])
-                        return PuzzleState.Incorrect;
-                }
-                else if (currentCellValue == CellValue.Crossed)
-                {
-                    if (currentRunIdx > -1)
-                    {
-                        if (previousCellValue == CellValue.Filled)
-                        {
-                        }
-                    }
-                }
-                */
 
                 previousCellValue = currentCellValue;
             }
