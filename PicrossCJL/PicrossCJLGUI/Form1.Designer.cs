@@ -37,6 +37,7 @@
             this.aProposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,40 +60,40 @@
             this.toolStripSeparator1,
             this.quitterToolStripMenuItem});
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
-            this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-            this.fichierToolStripMenuItem.Text = "Fichier";
+            this.fichierToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fichierToolStripMenuItem.Text = "File";
             // 
             // sauvegardezToolStripMenuItem
             // 
             this.sauvegardezToolStripMenuItem.Name = "sauvegardezToolStripMenuItem";
-            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.sauvegardezToolStripMenuItem.Text = "Sauvegarder";
+            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.sauvegardezToolStripMenuItem.Text = "Save file";
             this.sauvegardezToolStripMenuItem.Click += new System.EventHandler(this.sauvegardezToolStripMenuItem_Click);
             // 
             // chargerToolStripMenuItem
             // 
             this.chargerToolStripMenuItem.Name = "chargerToolStripMenuItem";
-            this.chargerToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.chargerToolStripMenuItem.Text = "Charger";
+            this.chargerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.chargerToolStripMenuItem.Text = "Load file";
             this.chargerToolStripMenuItem.Click += new System.EventHandler(this.chargerToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(136, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // quitterToolStripMenuItem
             // 
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.quitterToolStripMenuItem.Text = "Quitter";
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.quitterToolStripMenuItem.Text = "Close";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
             // aProposToolStripMenuItem
             // 
             this.aProposToolStripMenuItem.Name = "aProposToolStripMenuItem";
-            this.aProposToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
-            this.aProposToolStripMenuItem.Text = "A propos";
+            this.aProposToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aProposToolStripMenuItem.Text = "About";
             this.aProposToolStripMenuItem.Click += new System.EventHandler(this.aProposToolStripMenuItem_Click);
             // 
             // ofd
@@ -104,15 +105,27 @@
             this.sfd.FileName = "MyPicrossGame";
             this.sfd.Filter = "Fichiers XML|*.xml";
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Location = new System.Drawing.Point(13, 37);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(559, 513);
+            this.panel1.TabIndex = 2;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 562);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Picross CJL";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -131,6 +144,7 @@
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.SaveFileDialog sfd;
         private System.Windows.Forms.ToolStripMenuItem aProposToolStripMenuItem;
+        private System.Windows.Forms.Panel panel1;
 
 
     }

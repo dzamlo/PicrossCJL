@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -46,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\PicrossCJL\PicrossPuzzle.cs">
+      <Link>PicrossPuzzle.cs</Link>
+    </Compile>
+    <Compile Include="..\PicrossCJL\PicrossSolver.cs">
+      <Link>PicrossSolver.cs</Link>
+    </Compile>
     <Compile Include="PicrossCJLView.cs">
       <SubType>Form</SubType>
     </Compile>
