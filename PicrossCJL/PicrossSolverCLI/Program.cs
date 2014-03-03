@@ -50,37 +50,7 @@ namespace PicrossSolverCLI
             int[][] linesValues = puzzle.BitmapToLinesValue(puzzle.Cells);
             int[][] columnValues = puzzle.BitmapToColumnsValue(puzzle.Cells);
 
-            for (int y = 0; y < puzzle.Size.Height; y++)
-            {
-                for (int x = 0; x < puzzle.Size.Width; x++)
-                    Console.Write((puzzle.Cells[x, y] == PicrossPuzzle.CellValue.Filled) ? "#" : "-");
-                Console.WriteLine();
-            }
-
-            Console.WriteLine();
-            for (int i = 0; i < puzzle.Size.Height; i++)
-            {
-                Console.Write("Line {0}: ", i);
-                foreach (int v in linesValues[i])
-                    Console.Write("{0} ", v);
-                Console.WriteLine();
-            }
-
-            Console.WriteLine();
-            for (int i = 0; i < puzzle.Size.Width; i++)
-            {
-                Console.Write("Column {0}: ", i);
-                foreach (int v in columnValues[i])
-                    Console.Write("{0} ", v);
-                Console.WriteLine();
-            }
-                
-                    
-            
-
-
-
-            
+            Console.WriteLine(puzzle.ToString());
         }
     }
 }

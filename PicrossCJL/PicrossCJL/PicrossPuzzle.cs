@@ -115,6 +115,44 @@ namespace PicrossCJL
         #region Methods
 
         /// <summary>
+        /// To String method
+        /// </summary>
+        /// <returns>String value</returns>
+        public override string ToString()
+        {
+            string str = string.Empty;
+
+            // Draw the cells value
+            for (int y = 0; y < this.Size.Height; y++)
+            {
+                for (int x = 0; x < this.Size.Width; x++)
+                    str += (this.Cells[x, y] == PicrossPuzzle.CellValue.Filled) ? "#" : "-";
+                str += "\n";
+            }
+
+            // Show lines values
+            str += "\n";
+            for (int i = 0; i < this.Size.Height; i++)
+            {
+                str += string.Format("Line {0}: ", i);
+                foreach (int v in this.LinesValues[i])
+                    str += string.Format("{0} ", v);
+                str += "\n";
+            }
+
+            // Show columns values
+            str += "\n";
+            for (int i = 0; i < this.Size.Width; i++)
+            {
+                str += string.Format("Column {0}: ", i);
+                foreach (int v in this.ColumnsValues[i])
+                    str += string.Format("{0} ", v);
+                str += "\n";
+            }
+
+            return str;
+        }
+        /// <summary>
         /// Method to convert a bitmap image into an array of CellValue
         /// </summary>
         /// <param name="bmp">Bitmap image</param>
