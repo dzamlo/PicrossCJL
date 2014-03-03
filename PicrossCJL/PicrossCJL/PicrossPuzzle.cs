@@ -154,20 +154,61 @@ namespace PicrossCJL
         /// <param name="bmp">Bitmap image</param>
         /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
         /// <returns>2D integer array</returns>
-        unsafe private int[][] BitmapToLinesValue(Bitmap bmp, int threshold)
+        public int[][] BitmapToLinesValue(Bitmap bmp, int threshold)
         {
             CellValue[,] cells = this.BitmapToCellsValueArray(bmp, threshold);
-            int currentFilledValues = 0;
+            int currentValue = 0;
+            List<int> values = new List<int>();
 
-            for (int y = 0; y < bmp.Height; y++)
+            for (int y = 0; y < cells.GetLength(1); y++)
             {
-                for (int x = 0; x < bmp.Width; x++)
+                for (int x = 0; x < cells.GetLength(0); x++)
                 {
-                    if (cells[x, y] == CellValue.Empty)
-                        currentFilledValues += 1;
+                    if (cells[x, y] != CellValue.Filled)
+                    {
+                        if (currentValue > 0) values.Add(currentValue);
+                        currentValue = 0;
+                    }
                     else
-                        this.LinesValues[currentFilledValues][y] += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+                        currentValue += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+
                 }
+                if (currentValue > 0) values.Add(currentValue);
+                currentValue = 0;
+                this.LinesValues[y] = values.ToArray();
+                values.Clear();
+            }
+
+            return this.LinesValues;
+        }
+
+        /// <summary>
+        /// Method to get values of each lines on the bitmap
+        /// </summary>
+        /// <param name="cells">2D CellValue array</param>
+        /// <returns>2D integer array</returns>
+        public int[][] BitmapToLinesValue(CellValue[,] cells)
+        {
+            int currentValue = 0;
+            List<int> values = new List<int>();
+            
+            for (int y = 0; y < cells.GetLength(1); y++)
+            {
+                for (int x = 0; x < cells.GetLength(0); x++)
+                {
+                    if (cells[x, y] != CellValue.Filled)
+                    {
+                        if(currentValue > 0) values.Add(currentValue);
+                        currentValue = 0;
+                    }
+                    else
+                        currentValue += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+
+                }
+                if (currentValue > 0) values.Add(currentValue);
+                currentValue = 0;
+                this.LinesValues[y] = values.ToArray();
+                values.Clear();
             }
 
             return this.LinesValues;
@@ -179,20 +220,61 @@ namespace PicrossCJL
         /// <param name="bmp">Bitmap image</param>
         /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
         /// <returns>2D integer array</returns>
-        private int[][] BitmapToColumnsValue(Bitmap bmp, int threshold)
+        public int[][] BitmapToColumnsValue(Bitmap bmp, int threshold)
         {
             CellValue[,] cells = this.BitmapToCellsValueArray(bmp, threshold);
-            int currentFilledValues = 0;
+            int currentValue = 0;
+            List<int> values = new List<int>();
 
-            for (int x = 0; x < bmp.Width; x++)
+            for (int x = 0; x < cells.GetLength(1); x++)
             {
-                for (int y = 0; y < bmp.Height; y++)
+                for (int y = 0; y < cells.GetLength(0); y++)
                 {
-                    if (cells[x, y] == CellValue.Empty)
-                        currentFilledValues += 1;
+                    if (cells[x, y] != CellValue.Filled)
+                    {
+                        if (currentValue > 0) values.Add(currentValue);
+                        currentValue = 0;
+                    }
                     else
-                        this.ColumnsValues[x][currentFilledValues] += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+                        currentValue += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+
                 }
+                if (currentValue > 0) values.Add(currentValue);
+                currentValue = 0;
+                this.ColumnsValues[x] = values.ToArray();
+                values.Clear();
+            }
+
+            return this.ColumnsValues;
+        }
+
+        /// <summary>
+        /// Method to get values of each column on the bitmap
+        /// </summary>
+        /// <param name="cells">2D CellValue array</param>
+        /// <returns>2D integer array</returns>
+        public int[][] BitmapToColumnsValue(CellValue[,] cells)
+        {
+            int currentValue = 0;
+            List<int> values = new List<int>();
+
+            for (int x = 0; x < cells.GetLength(1); x++)
+            {
+                for (int y = 0; y < cells.GetLength(0); y++)
+                {
+                    if (cells[x, y] != CellValue.Filled)
+                    {
+                        if (currentValue > 0) values.Add(currentValue);
+                        currentValue = 0;
+                    }
+                    else
+                        currentValue += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+
+                }
+                if (currentValue > 0) values.Add(currentValue);
+                currentValue = 0;
+                this.ColumnsValues[x] = values.ToArray();
+                values.Clear();
             }
 
             return this.ColumnsValues;
