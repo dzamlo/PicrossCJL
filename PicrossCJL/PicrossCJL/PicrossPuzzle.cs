@@ -114,6 +114,12 @@ namespace PicrossCJL
 
         #region Methods
 
+        /// <summary>
+        /// Method to convert a bitmap image into an array of CellValue
+        /// </summary>
+        /// <param name="bmp">Bitmap image</param>
+        /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
+        /// <returns>2D CellValue array</returns>
         unsafe private CellValue[,] BitmapToCellsValueArray(Bitmap bmp, int threshold)
         {
             CellValue[,] cells = new CellValue[bmp.Width, bmp.Height];
@@ -143,34 +149,53 @@ namespace PicrossCJL
         }
 
         /// <summary>
-        /// 
+        /// Method to get values of each lines on the bitmap
         /// </summary>
-        /// <param name="bmp"></param>
-        /// <returns></returns>
+        /// <param name="bmp">Bitmap image</param>
+        /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
+        /// <returns>2D integer array</returns>
         unsafe private int[][] BitmapToLinesValue(Bitmap bmp, int threshold)
         {
             CellValue[,] cells = this.BitmapToCellsValueArray(bmp, threshold);
+            int currentFilledValues = 0;
 
             for (int y = 0; y < bmp.Height; y++)
             {
                 for (int x = 0; x < bmp.Width; x++)
                 {
-
+                    if (cells[x, y] == CellValue.Empty)
+                        currentFilledValues += 1;
+                    else
+                        this.LinesValues[currentFilledValues][y] += (cells[x, y] == CellValue.Filled) ? 1 : 0;
                 }
             }
 
-
-            return new int[0][];
+            return this.LinesValues;
         }
 
         /// <summary>
-        /// 
+        /// Method to get values of each columns on the bitmap
         /// </summary>
-        /// <param name="bmp"></param>
-        /// <returns></returns>
+        /// <param name="bmp">Bitmap image</param>
+        /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
+        /// <returns>2D integer array</returns>
         private int[][] BitmapToColumnsValue(Bitmap bmp, int threshold)
         {
-            return new int[0][];
+            CellValue[,] cells = this.BitmapToCellsValueArray(bmp, threshold);
+            int currentFilledValues = 0;
+
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    if (cells[x, y] == CellValue.Empty)
+                        currentFilledValues += 1;
+                    else
+                        this.ColumnsValues[x][currentFilledValues] += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+                }
+            }
+
+            return this.ColumnsValues;
         }
 
         /// <summary>
@@ -192,7 +217,7 @@ namespace PicrossCJL
         /// <summary>
         /// Save the current PicrossPuzzle to a xml serialization file.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">Xml filename</param>
         public void SaveToFile(string filename)
         {
             // Reference : http://msdn.microsoft.com/en-us/library/4abbf6k0(v=vs.110).aspx
@@ -202,6 +227,11 @@ namespace PicrossCJL
             stream.Close();
         }
 
+        /// <summary>
+        /// Method to check a line
+        /// </summary>
+        /// <param name="lineNo">Number of the line (integer)</param>
+        /// <returns>PuzzleState enum</returns>
         public PuzzleState CheckPuzzleLine(int lineNo)
         {
             Size s = Size;
@@ -215,6 +245,7 @@ namespace PicrossCJL
             int emptyRunLength = 0;
             CellValue previousCellValue = CellValue.Crossed;
             CellValue currentCellValue;
+
             for (int x = 0; x < w; x++)
             {
                 currentCellValue = Cells[lineNo, x];
@@ -226,7 +257,6 @@ namespace PicrossCJL
                         {
                             case CellValue.Empty:
                                 //TODO: complete
-
                                 break;
                             case CellValue.Filled:
                                 //TODO: complete
@@ -238,6 +268,7 @@ namespace PicrossCJL
                                 break;
                         }
                         break;
+
                     case CellValue.Filled:
                         switch (previousCellValue)
                         {
@@ -258,6 +289,7 @@ namespace PicrossCJL
                         }
                         emptyRunLength = 0;
                         break;
+
                     case CellValue.Crossed:
                         switch (previousCellValue)
                         {
@@ -276,6 +308,7 @@ namespace PicrossCJL
                         }
                         emptyRunLength = 0;
                         break;
+
                     default:
                         break;
                 }
@@ -291,11 +324,22 @@ namespace PicrossCJL
             return PuzzleState.Incomplete;
         }
 
+        /// <summary>
+        /// Method to check a column
+        /// </summary>
+        /// <param name="columnNo">Number of the column</param>
+        /// <returns>PuzzleState enum</returns>
         public PuzzleState CheckPuzzleColumn(int columnNo)
         {
+
+
             return PuzzleState.Incomplete;
         }
 
+        /// <summary>
+        /// Method to get the current puzzle state
+        /// </summary>
+        /// <returns>PuzzleState enum</returns>
         public PuzzleState GetPuzzleState()
         {
             Size s = Size;
@@ -314,11 +358,14 @@ namespace PicrossCJL
                         incorrect = true;
                         finished = false;
                         break;
+
                     case PuzzleState.Finished:
                         break;
+
                     case PuzzleState.Incomplete:
                         finished = false;
                         break;
+
                     default:
                         break;
                 }
@@ -347,6 +394,7 @@ namespace PicrossCJL
 
             return incorrect ? PuzzleState.Incorrect : finished ? PuzzleState.Finished : PuzzleState.Incomplete;
         }
+
         #endregion
     }
 }
