@@ -38,10 +38,13 @@ namespace PicrossSolverCLI
             puzzle.Cells[3, 0] = PicrossPuzzle.CellValue.Filled;
 
             puzzle.Cells[0, 1] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[1, 1] = PicrossPuzzle.CellValue.Crossed;
             puzzle.Cells[2, 1] = PicrossPuzzle.CellValue.Filled;
             puzzle.Cells[3, 1] = PicrossPuzzle.CellValue.Filled;
 
             puzzle.Cells[1, 2] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[2, 2] = PicrossPuzzle.CellValue.Crossed;
+            puzzle.Cells[3, 2] = PicrossPuzzle.CellValue.Crossed;
 
             puzzle.Cells[0, 3] = PicrossPuzzle.CellValue.Filled;
             puzzle.Cells[1, 3] = PicrossPuzzle.CellValue.Filled;

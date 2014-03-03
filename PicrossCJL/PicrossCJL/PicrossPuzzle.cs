@@ -126,7 +126,17 @@ namespace PicrossCJL
             for (int y = 0; y < this.Size.Height; y++)
             {
                 for (int x = 0; x < this.Size.Width; x++)
-                    str += (this.Cells[x, y] == PicrossPuzzle.CellValue.Filled) ? "#" : "-";
+                {
+                    switch (this.Cells[x, y])
+                    {
+                        case CellValue.Filled:  str += "#";
+                            break;
+                        case CellValue.Empty:   str += "-";
+                            break;
+                        case CellValue.Crossed: str += "X";
+                            break;
+                    }
+                }
                 str += "\n";
             }
 
@@ -152,6 +162,7 @@ namespace PicrossCJL
 
             return str;
         }
+
         /// <summary>
         /// Method to convert a bitmap image into an array of CellValue
         /// </summary>
