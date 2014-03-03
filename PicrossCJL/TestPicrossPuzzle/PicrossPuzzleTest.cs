@@ -137,31 +137,45 @@ namespace TestPicrossPuzzle
         [TestMethod()]
         public void BitmapToColumnsValueTest()
         {
-            PicrossPuzzle puzzle = null; // TODO: initialisez à une valeur appropriée
-            PicrossPuzzle target = new PicrossPuzzle(puzzle); // TODO: initialisez à une valeur appropriée
-            Bitmap bmp = null; // TODO: initialisez à une valeur appropriée
-            int threshold = 0; // TODO: initialisez à une valeur appropriée
-            int[][] expected = null; // TODO: initialisez à une valeur appropriée
-            int[][] actual;
-            actual = target.BitmapToColumnsValue(bmp, threshold);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Vérifiez l\'exactitude de cette méthode de test.");
-        }
+            PicrossPuzzle puzzle = new PicrossPuzzle(new PicrossPuzzle.CellValue[4, 4], new int[4][], new int[4][]);
 
-        /// <summary>
-        ///Test pour BitmapToColumnsValue
-        ///</summary>
-        [TestMethod()]
-        public void BitmapToColumnsValueTest1()
-        {
-            PicrossPuzzle puzzle = null; // TODO: initialisez à une valeur appropriée
-            PicrossPuzzle target = new PicrossPuzzle(puzzle); // TODO: initialisez à une valeur appropriée
-            PicrossPuzzle.CellValue[,] cells = null; // TODO: initialisez à une valeur appropriée
-            int[][] expected = null; // TODO: initialisez à une valeur appropriée
-            int[][] actual;
-            actual = target.BitmapToColumnsValue(cells);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Vérifiez l\'exactitude de cette méthode de test.");
+            for (int y = 0; y < 4; y++)
+                for (int x = 0; x < 4; x++)
+                    puzzle.Cells[x, y] = PicrossPuzzle.CellValue.Empty;
+
+            puzzle.Cells[0, 0] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[1, 0] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[3, 0] = PicrossPuzzle.CellValue.Filled;
+
+            puzzle.Cells[0, 1] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[1, 1] = PicrossPuzzle.CellValue.Crossed;
+            puzzle.Cells[2, 1] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[3, 1] = PicrossPuzzle.CellValue.Filled;
+
+            puzzle.Cells[1, 2] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[2, 2] = PicrossPuzzle.CellValue.Crossed;
+            puzzle.Cells[3, 2] = PicrossPuzzle.CellValue.Crossed;
+
+            puzzle.Cells[0, 3] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[1, 3] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[2, 3] = PicrossPuzzle.CellValue.Filled;
+
+            int[][] columnValues = puzzle.BitmapToColumnsValue(puzzle.Cells);
+
+            // Column 0
+            Assert.AreEqual(2, columnValues[0][0]);
+            Assert.AreEqual(1, columnValues[0][1]);
+
+            // Column 1
+            Assert.AreEqual(1, columnValues[1][0]);
+            Assert.AreEqual(2, columnValues[1][1]);
+
+            // Column 2
+            Assert.AreEqual(1, columnValues[2][0]);
+            Assert.AreEqual(1, columnValues[2][1]);
+
+            // Column 3
+            Assert.AreEqual(2, columnValues[3][0]);
         }
 
         /// <summary>
@@ -170,31 +184,44 @@ namespace TestPicrossPuzzle
         [TestMethod()]
         public void BitmapToLinesValueTest()
         {
-            PicrossPuzzle puzzle = null; // TODO: initialisez à une valeur appropriée
-            PicrossPuzzle target = new PicrossPuzzle(puzzle); // TODO: initialisez à une valeur appropriée
-            PicrossPuzzle.CellValue[,] cells = null; // TODO: initialisez à une valeur appropriée
-            int[][] expected = null; // TODO: initialisez à une valeur appropriée
-            int[][] actual;
-            actual = target.BitmapToLinesValue(cells);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Vérifiez l\'exactitude de cette méthode de test.");
-        }
+            PicrossPuzzle puzzle = new PicrossPuzzle(new PicrossPuzzle.CellValue[4, 4], new int[4][], new int[4][]);
 
-        /// <summary>
-        ///Test pour BitmapToLinesValue
-        ///</summary>
-        [TestMethod()]
-        public void BitmapToLinesValueTest1()
-        {
-            PicrossPuzzle puzzle = null; // TODO: initialisez à une valeur appropriée
-            PicrossPuzzle target = new PicrossPuzzle(puzzle); // TODO: initialisez à une valeur appropriée
-            Bitmap bmp = null; // TODO: initialisez à une valeur appropriée
-            int threshold = 0; // TODO: initialisez à une valeur appropriée
-            int[][] expected = null; // TODO: initialisez à une valeur appropriée
-            int[][] actual;
-            actual = target.BitmapToLinesValue(bmp, threshold);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Vérifiez l\'exactitude de cette méthode de test.");
+            for (int y = 0; y < 4; y++)
+                for (int x = 0; x < 4; x++)
+                    puzzle.Cells[x, y] = PicrossPuzzle.CellValue.Empty;
+
+            puzzle.Cells[0, 0] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[1, 0] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[3, 0] = PicrossPuzzle.CellValue.Filled;
+
+            puzzle.Cells[0, 1] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[1, 1] = PicrossPuzzle.CellValue.Crossed;
+            puzzle.Cells[2, 1] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[3, 1] = PicrossPuzzle.CellValue.Filled;
+
+            puzzle.Cells[1, 2] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[2, 2] = PicrossPuzzle.CellValue.Crossed;
+            puzzle.Cells[3, 2] = PicrossPuzzle.CellValue.Crossed;
+
+            puzzle.Cells[0, 3] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[1, 3] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[2, 3] = PicrossPuzzle.CellValue.Filled;
+
+            int[][] linesValues = puzzle.BitmapToLinesValue(puzzle.Cells);
+
+            // Line 0
+            Assert.AreEqual(2, linesValues[0][0]);
+            Assert.AreEqual(1, linesValues[0][1]);
+
+            // Line 1
+            Assert.AreEqual(1, linesValues[1][0]);
+            Assert.AreEqual(2, linesValues[1][1]);
+
+            // Line 2
+            Assert.AreEqual(1, linesValues[2][0]);
+
+            // Line 3
+            Assert.AreEqual(3, linesValues[3][0]);
         }
 
         /// <summary>
