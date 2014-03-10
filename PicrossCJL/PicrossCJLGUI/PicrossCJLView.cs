@@ -1,5 +1,5 @@
 ﻿/*******************
- * Author : J. Peiry
+ * Author : J. Peiry, C. Rejas, L. Damien
  * Date   : 10.02.2014
  * Desc   : GUI for the PicrossPuzzle application
  * *****************/
@@ -10,19 +10,24 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Xml;
 using System.Drawing;
+using PicrossCJL;
+using System.Text;
 
 namespace PicrossCJLGUI
 {
     public partial class Form1 : Form
     {
+        #region Constants
         const int PIXEL_PER_DIGIT = 20;
         const int MARGIN_TOP_LEFT = 2;
-        const string FONT_NAME = "Comic Sans Ms";
-        Rectangle[,] _cells;
+        const string FONT_NAME = "Comic Sans Ms"; // RC: Comic Sans MS... really ?
+        #endregion
 
-
-        Graphics g;
-        PicrossController _controller;
+        #region Fields & Properties
+        private Rectangle[,] _cells;
+        private Graphics g;
+        private PicrossController _controller;
+        
 
         public Rectangle[,] CellsRectangle
         {
@@ -44,16 +49,21 @@ namespace PicrossCJLGUI
             }
             set { _controller = value; }
         }
+        #endregion
+
+        #region Ctor
         public Form1()
         {
             InitializeComponent();
             g = panel1.CreateGraphics();
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+
+            this.Controller = new PicrossController();
             this.Draw();
-
         }
+        #endregion
 
-
+        #region Methods
         /// <summary>
         /// On click on the "Save file" button in the menu. Save the file.
         /// </summary>
@@ -81,13 +91,9 @@ namespace PicrossCJLGUI
         private void chargerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                //load file and send it to the constructor of the PicrossPuzzle
-                //Call Puzzle.Load()
+                this.Controller.Puzzle = PicrossPuzzle.LoadXmlFile(ofd.FileName);
 
-
-
-            }
+            this.UpdateView();
         }
 
         /// <summary>
@@ -95,109 +101,119 @@ namespace PicrossCJLGUI
         /// </summary>
         private void aProposToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Created by Kris, Loic and Jordan");
-
+            MessageBox.Show("Picross Puzzle v1.0 - CFPT-I\nby Loïc.D, Rejas.C and Peiry.J", "About");
         }
 
+        /// <summary>
+        /// Method to update the view
+        /// </summary>
         public void UpdateView()
         {
+            this.Draw();
         }
 
+        /// <summary>
+        /// On load form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
 
+        /// <summary>
+        /// Draw the Picross
+        /// </summary>
         private void Draw()
         {
             panel1.Invalidate();
-
         }
 
-        private void DrawGrid(int lines, int columns, Graphics g)
-        {
-        }
-
+        /// <summary>
+        /// Paint panel method
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            int LineSize = 4;
-            int ColumnSize = 4;
-            int ColumnsCount = 12;
-            int LineCount = 12;
-            int CellLineCount = LineCount;
-            int CellColumnCount = ColumnsCount;
+            this.g.Clear(Color.White);
+            CellsRectangle = new Rectangle[this.Controller.GetCellSize().Width, this.Controller.GetCellSize().Height];
 
-            Random rd = new Random();
-
-            //Draw columns rectangles & values
-            for (int i = LineSize; i < ColumnsCount + LineSize; i++)
+            #region Draw columns values
+            // Draw columns rectangles & values
+            for (int i = 0; i < this.Controller.Puzzle.ColumnsValues.GetLength(0); i++)
             {
-                for (int j = 0; j < ColumnSize; j++)
+                for (int j = 0; j < this.Controller.Puzzle.ColumnsValues[i].Length; j++)
                 {
-                    g.DrawRectangle(Pens.Black, new Rectangle(i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                    g.DrawRectangle(Pens.Black, new Rectangle((i + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
 
-                    g.DrawString(rd.Next(0, 10).ToString(),
+                    g.DrawString(this.Controller.Puzzle.ColumnsValues[i][j].ToString(),
                         new Font(FONT_NAME, PIXEL_PER_DIGIT / 2),
                         Brushes.Black,
-                        new RectangleF(i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                        new RectangleF((i + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
                 }
             }
+            #endregion
 
-            //Draw lines rectangles & values
-            for (int i = ColumnSize; i < LineCount + ColumnSize; i++)
+            #region Draw lines values
+            // Draw lines rectangles & values
+            for (int i = 0; i < this.Controller.Puzzle.LinesValues.GetLength(0); i++)
             {
-                for (int j = 0; j < LineSize; j++)
+                for (int j = 0; j < this.Controller.Puzzle.LinesValues[i].Length; j++)
                 {
-                    g.DrawRectangle(Pens.Blue, new Rectangle(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                    g.DrawRectangle(Pens.Blue, new Rectangle(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
 
-                    g.DrawString(rd.Next(0, 10).ToString(),
+                    g.DrawString(this.Controller.Puzzle.LinesValues[i][j].ToString(),
                         new Font(FONT_NAME, PIXEL_PER_DIGIT / 2),
                         Brushes.Black,
-                        new RectangleF(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                        new RectangleF(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
                 }
             }
-            
-            //Draw cells rectangles
-            //for (int i = LineSize; i < LineSize + CellLineCount; i++) 
-            for(int i = 0; i < CellLineCount; i++)
+            #endregion
+
+            #region Draw cells grid
+            // Draw cells grid
+            for (int x = 0; x < this.Controller.GetCellSize().Width; x++)
             {
-
-                for (int j = 0; j < CellColumnCount; j++)
+                for (int y = 0; y < this.Controller.GetCellSize().Height; y++)
                 {
-                    Rectangle r = new Rectangle(i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + LineSize*PIXEL_PER_DIGIT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + ColumnSize*PIXEL_PER_DIGIT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT);
-                    CellsRectangle[i, j] = r;
-                    g.DrawRectangle(Pens.Red, r);
-                }
-            }
-
-                    
-
-         
-
-            //g.DrawLine(Pens.Black, new Point(0, 0), new Point(panel1.Width, panel1.Height));
-
-        }
-
-        private void panel1_MouseClick(object sender, MouseEventArgs e)
-        {
-            for (int i = 0; i < CellsRectangle.GetLength(0); i++)
-            {
-                for (int j = 0; j < CellsRectangle.GetLength(1); j++)
-                {
-                    if (CellsRectangle[i, j].Contains(e.Location))
+                    Rectangle r = new Rectangle(x * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, y * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT);
+                    CellsRectangle[x, y] = r;
+                    switch (this.Controller.GetCellState(x, y))
                     {
-                        //MessageBox.Show("Clicked in the cells' space");
-                        //Get state of the current rectangle
-
-                        //Change state
-
-                        //(Draw a cross)
-                        g.DrawLine(Pens.Black , new Point(CellsRectangle[i, j].X, CellsRectangle[i, j].Y), new Point(CellsRectangle[i, j].X + PIXEL_PER_DIGIT, CellsRectangle[i, j].Y + PIXEL_PER_DIGIT));
-                        g.DrawLine(Pens.Black, new Point(CellsRectangle[i, j].X+ PIXEL_PER_DIGIT, CellsRectangle[i, j].Y), new Point(CellsRectangle[i, j].X, CellsRectangle[i, j].Y + PIXEL_PER_DIGIT));
+                        case PicrossPuzzle.CellValue.Empty:
+                            g.DrawRectangle(Pens.Red, r);
+                            break;
+                        case PicrossPuzzle.CellValue.Crossed:
+                            g.DrawRectangle(Pens.Red, r);
+                            g.DrawLine(Pens.Black, new Point(r.Left, r.Top), new Point(r.Right, r.Bottom));
+                            g.DrawLine(Pens.Black, new Point(r.Right, r.Top), new Point(r.Left, r.Bottom));
+                            break;
+                        case PicrossPuzzle.CellValue.Filled:
+                            g.FillRectangle(Brushes.Red, r);
+                            break;
+                        default: break;
                     }
                 }
             }
+            #endregion
         }
 
+        /// <summary>
+        /// Mouse Click on Panel
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+           for (int x = 0; x < this.Controller.GetCellSize().Width; x++)
+                for (int y = 0; y < this.Controller.GetCellSize().Height; y++)
+                    if (CellsRectangle[x, y].Contains(e.Location))
+                        this.Controller.Puzzle.Cells[x, y] = (PicrossPuzzle.CellValue)(((int)this.Controller.Puzzle.Cells[x, y] + 1) % 3);
+
+           this.UpdateView();
+        }
+        #endregion
     }
 }

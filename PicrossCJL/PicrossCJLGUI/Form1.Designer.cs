@@ -66,26 +66,26 @@
             // sauvegardezToolStripMenuItem
             // 
             this.sauvegardezToolStripMenuItem.Name = "sauvegardezToolStripMenuItem";
-            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
-            this.sauvegardezToolStripMenuItem.Text = "Save file";
+            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.sauvegardezToolStripMenuItem.Text = "Save...";
             this.sauvegardezToolStripMenuItem.Click += new System.EventHandler(this.sauvegardezToolStripMenuItem_Click);
             // 
             // chargerToolStripMenuItem
             // 
             this.chargerToolStripMenuItem.Name = "chargerToolStripMenuItem";
-            this.chargerToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
-            this.chargerToolStripMenuItem.Text = "Load file";
+            this.chargerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.chargerToolStripMenuItem.Text = "Load...";
             this.chargerToolStripMenuItem.Click += new System.EventHandler(this.chargerToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(116, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // quitterToolStripMenuItem
             // 
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.quitterToolStripMenuItem.Text = "Close";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
@@ -107,6 +107,9 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Location = new System.Drawing.Point(13, 37);

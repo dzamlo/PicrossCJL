@@ -14,6 +14,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing.Imaging;
+using System.Xml;
 
 namespace PicrossCJL
 {
@@ -42,6 +43,13 @@ namespace PicrossCJL
         protected int[] _nbCrossedByLines;
         private int[][] _columnsValues;
         protected int[] _nbCrossedByColumns;
+        private int _state;
+
+        public int State
+        {
+            get { return _state; }
+            set { _state = value; }
+        }
 
         public CellValue[,] Cells
         {
@@ -52,14 +60,14 @@ namespace PicrossCJL
         public int[][] LinesValues
         {
             get { return this._linesValues; }
-            private set { this._linesValues = value; }
+            set { this._linesValues = value; }
         }
 
 
         public int[][] ColumnsValues
         {
             get { return this._columnsValues; }
-            private set { this._columnsValues = value; }
+            set { this._columnsValues = value; }
         }
 
         public Size Size
@@ -93,6 +101,14 @@ namespace PicrossCJL
             this.LinesValues = linesValues;
             this.ColumnsValues = columnsValues;
 
+            for (int x = 0; x < this.Cells.GetLength(0); x++)
+                for (int y = 0; y < this.Cells.GetLength(1); y++)
+                    this.Cells[x, y] = CellValue.Empty;
+
+            this.ColumnsValues = this.BitmapToColumnsValue(this.Cells);
+            this.LinesValues = this.BitmapToLinesValue(this.Cells);
+
+            
             if (nbCrossedByLines != null)
                 _nbCrossedByLines = nbCrossedByLines;
             else
@@ -114,7 +130,6 @@ namespace PicrossCJL
                     _nbCrossedByColumns[i] = ColumnsValues[i].Sum();
                 }
             }
-
         }
 
         /// <summary>
@@ -333,9 +348,9 @@ namespace PicrossCJL
             int currentValue = 0;
             List<int> values = new List<int>();
 
-            for (int x = 0; x < cells.GetLength(1); x++)
+            for (int x = 0; x < cells.GetLength(0); x++)
             {
-                for (int y = 0; y < cells.GetLength(0); y++)
+                for (int y = 0; y < cells.GetLength(1); y++)
                 {
                     if (cells[x, y] != CellValue.Filled)
                     {
@@ -382,6 +397,81 @@ namespace PicrossCJL
             Stream stream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this);
             stream.Close();
+        }
+
+        public static PicrossPuzzle LoadXmlFile(string xmlPath)
+        {
+            int nbLines = 0;
+            int nbColumns = 0;
+            int index = 0;
+            string xmlString = string.Empty;
+            List<int> values;
+            PicrossPuzzle puzzle;
+            StringBuilder sb = new StringBuilder();
+
+            using (StreamReader sr = new StreamReader(xmlPath))
+            {
+                String line;
+                while ((line = sr.ReadLine()) != null)
+                    sb.AppendLine(line);
+            }
+            xmlString = sb.ToString();
+
+            sb = new StringBuilder();
+            using (XmlReader reader = XmlReader.Create(new StringReader(xmlString)))
+            {
+                reader.ReadToFollowing("NbLines");
+                reader.MoveToFirstAttribute();
+                nbLines = Convert.ToInt16(reader.Value);
+                sb.AppendLine("Number of lines: " + nbLines);
+
+                reader.ReadToFollowing("NbRows");
+                reader.MoveToFirstAttribute();
+                nbColumns = Convert.ToInt16(reader.Value);
+                sb.AppendLine("Number of lines: " + nbColumns);
+
+                puzzle = new PicrossPuzzle(new PicrossPuzzle.CellValue[nbColumns, nbLines], new int[nbLines][], new int[nbColumns][]);
+                while (reader.ReadToFollowing("Line"))
+                {
+                    reader.MoveToFirstAttribute();
+                    index = Convert.ToInt16(reader.Value);
+                    reader.ReadToFollowing("indices_string");
+                    reader.MoveToFirstAttribute();
+
+                    string indices = reader.ReadElementContentAsString();
+                    if (indices != string.Empty)
+                    {
+                        values = new List<int>();
+                        foreach (string s in new List<string>(indices.Split(' ')))
+                            values.Add(Convert.ToInt16(s));
+
+                        puzzle.LinesValues[index] = values.ToArray();
+                    }
+                }
+            }
+
+            using (XmlReader reader = XmlReader.Create(new StringReader(xmlString)))
+            {
+                while (reader.ReadToFollowing("Row"))
+                {
+                    reader.MoveToFirstAttribute();
+                    index = Convert.ToInt16(reader.Value);
+
+                    reader.ReadToFollowing("indices_string");
+                    reader.MoveToFirstAttribute();
+
+                    string indices = reader.ReadElementContentAsString();
+                    if (indices != string.Empty)
+                    {
+                        values = new List<int>();
+                        foreach (string s in new List<string>(indices.Split(' ')))
+                            values.Add(Convert.ToInt16(s));
+
+                        puzzle.ColumnsValues[index] = values.ToArray();
+                    }
+                }
+            }
+            return puzzle;
         }
 
         /// <summary>
