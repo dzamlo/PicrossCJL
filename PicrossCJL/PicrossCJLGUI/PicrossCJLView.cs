@@ -15,9 +15,35 @@ namespace PicrossCJLGUI
 {
     public partial class Form1 : Form
     {
+        const int PIXEL_PER_DIGIT = 20;
+        const int MARGIN_TOP_LEFT = 2;
+        const string FONT_NAME = "Comic Sans Ms";
+        Rectangle[,] _cells;
+
 
         Graphics g;
+        PicrossController _controller;
 
+        public Rectangle[,] CellsRectangle
+        {
+            get {
+                if (_cells == null)
+                    _cells = new Rectangle[12, 12];
+                return _cells;
+            }
+            set { _cells = value; }
+        }
+
+        internal PicrossController Controller
+        {
+            get
+            {
+                if (_controller == null)
+                    _controller = new PicrossController();
+                return _controller;
+            }
+            set { _controller = value; }
+        }
         public Form1()
         {
             InitializeComponent();
@@ -59,8 +85,8 @@ namespace PicrossCJLGUI
                 //load file and send it to the constructor of the PicrossPuzzle
                 //Call Puzzle.Load()
 
-                
-                                
+
+
             }
         }
 
@@ -70,7 +96,7 @@ namespace PicrossCJLGUI
         private void aProposToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Created by Kris, Loic and Jordan");
-            
+
         }
 
         public void UpdateView()
@@ -85,7 +111,7 @@ namespace PicrossCJLGUI
         private void Draw()
         {
             panel1.Invalidate();
-            
+
         }
 
         private void DrawGrid(int lines, int columns, Graphics g)
@@ -94,7 +120,83 @@ namespace PicrossCJLGUI
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            g.DrawLine(Pens.Black, new Point(0, 0), new Point(panel1.Width, panel1.Height));
+            int LineSize = 4;
+            int ColumnSize = 4;
+            int ColumnsCount = 12;
+            int LineCount = 12;
+            int CellLineCount = LineCount;
+            int CellColumnCount = ColumnsCount;
+
+            Random rd = new Random();
+
+            //Draw columns rectangles & values
+            for (int i = LineSize; i < ColumnsCount + LineSize; i++)
+            {
+                for (int j = 0; j < ColumnSize; j++)
+                {
+                    g.DrawRectangle(Pens.Black, new Rectangle(i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+
+                    g.DrawString(rd.Next(0, 10).ToString(),
+                        new Font(FONT_NAME, PIXEL_PER_DIGIT / 2),
+                        Brushes.Black,
+                        new RectangleF(i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                }
+            }
+
+            //Draw lines rectangles & values
+            for (int i = ColumnSize; i < LineCount + ColumnSize; i++)
+            {
+                for (int j = 0; j < LineSize; j++)
+                {
+                    g.DrawRectangle(Pens.Blue, new Rectangle(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+
+                    g.DrawString(rd.Next(0, 10).ToString(),
+                        new Font(FONT_NAME, PIXEL_PER_DIGIT / 2),
+                        Brushes.Black,
+                        new RectangleF(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                }
+            }
+            
+            //Draw cells rectangles
+            //for (int i = LineSize; i < LineSize + CellLineCount; i++) 
+            for(int i = 0; i < CellLineCount; i++)
+            {
+
+                for (int j = 0; j < CellColumnCount; j++)
+                {
+                    Rectangle r = new Rectangle(i * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + LineSize*PIXEL_PER_DIGIT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + ColumnSize*PIXEL_PER_DIGIT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT);
+                    CellsRectangle[i, j] = r;
+                    g.DrawRectangle(Pens.Red, r);
+                }
+            }
+
+                    
+
+         
+
+            //g.DrawLine(Pens.Black, new Point(0, 0), new Point(panel1.Width, panel1.Height));
+
+        }
+
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < CellsRectangle.GetLength(0); i++)
+            {
+                for (int j = 0; j < CellsRectangle.GetLength(1); j++)
+                {
+                    if (CellsRectangle[i, j].Contains(e.Location))
+                    {
+                        //MessageBox.Show("Clicked in the cells' space");
+                        //Get state of the current rectangle
+
+                        //Change state
+
+                        //(Draw a cross)
+                        g.DrawLine(Pens.Black , new Point(CellsRectangle[i, j].X, CellsRectangle[i, j].Y), new Point(CellsRectangle[i, j].X + PIXEL_PER_DIGIT, CellsRectangle[i, j].Y + PIXEL_PER_DIGIT));
+                        g.DrawLine(Pens.Black, new Point(CellsRectangle[i, j].X+ PIXEL_PER_DIGIT, CellsRectangle[i, j].Y), new Point(CellsRectangle[i, j].X, CellsRectangle[i, j].Y + PIXEL_PER_DIGIT));
+                    }
+                }
+            }
         }
 
     }

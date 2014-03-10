@@ -86,6 +86,7 @@ namespace PicrossSolverCLI
 
             sw.Restart();
             solver.Solve(puzzle);
+
             sw.Stop();
             Console.WriteLine("Time to solve 7x7: {0} ms", sw.ElapsedMilliseconds);
 
@@ -97,6 +98,7 @@ namespace PicrossSolverCLI
                 }
                 Console.WriteLine();
             }
+
         }
     }
 }
