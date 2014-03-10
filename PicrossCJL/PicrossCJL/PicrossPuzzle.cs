@@ -201,6 +201,11 @@ namespace PicrossCJL
                 str += "\n";
             }
 
+            // Show puzzle state
+
+            str += string.Format("State: {0} ", GetPuzzleState()); ;
+            str += "\n";
+
             return str;
         }
 
@@ -622,7 +627,7 @@ namespace PicrossCJL
         /// Method to get the current puzzle state
         /// </summary>
         /// <returns>PuzzleState enum</returns>
-        public PuzzleState GetPuzzleState()
+        public PuzzleState GetPuzzleState(int currentY = 0)
         {
             Size s = Size;
             int w = s.Width;
@@ -632,7 +637,7 @@ namespace PicrossCJL
             bool finished = true;
 
             // first check each line
-            for (int y = 0; y < h && !incorrect && finished; y++)
+            for (int y = currentY; y < h && !incorrect && finished; y++)
             {
                 switch (CheckPuzzleLine(y))
                 {
