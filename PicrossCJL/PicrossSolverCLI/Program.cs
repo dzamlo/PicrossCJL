@@ -29,12 +29,9 @@ namespace PicrossSolverCLI
 
             PicrossPuzzle puzzle = new PicrossPuzzle(new PicrossPuzzle.CellValue[4, 4], new int[4][], new int[4][]);
             
-            for (int y = 0; y < 4; y++)
-                for (int x = 0; x < 4; x++)
-                    puzzle.Cells[x, y] = PicrossPuzzle.CellValue.Empty;
-
             puzzle.Cells[0, 0] = PicrossPuzzle.CellValue.Filled;
             puzzle.Cells[1, 0] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[2, 0] = PicrossPuzzle.CellValue.Empty;
             puzzle.Cells[3, 0] = PicrossPuzzle.CellValue.Filled;
 
             puzzle.Cells[0, 1] = PicrossPuzzle.CellValue.Filled;
@@ -42,6 +39,7 @@ namespace PicrossSolverCLI
             puzzle.Cells[2, 1] = PicrossPuzzle.CellValue.Filled;
             puzzle.Cells[3, 1] = PicrossPuzzle.CellValue.Filled;
 
+            puzzle.Cells[0, 2] = PicrossPuzzle.CellValue.Empty;
             puzzle.Cells[1, 2] = PicrossPuzzle.CellValue.Filled;
             puzzle.Cells[2, 2] = PicrossPuzzle.CellValue.Crossed;
             puzzle.Cells[3, 2] = PicrossPuzzle.CellValue.Crossed;
@@ -49,6 +47,7 @@ namespace PicrossSolverCLI
             puzzle.Cells[0, 3] = PicrossPuzzle.CellValue.Filled;
             puzzle.Cells[1, 3] = PicrossPuzzle.CellValue.Filled;
             puzzle.Cells[2, 3] = PicrossPuzzle.CellValue.Filled;
+            puzzle.Cells[3, 3] = PicrossPuzzle.CellValue.Empty;
 
             int[][] linesValues = puzzle.BitmapToLinesValue(puzzle.Cells);
             int[][] columnValues = puzzle.BitmapToColumnsValue(puzzle.Cells);
