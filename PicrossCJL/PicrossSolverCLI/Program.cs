@@ -9,21 +9,6 @@ namespace PicrossSolverCLI
 {
     class Program
     {
-        static char CellValue2Char(PicrossPuzzle.CellValue cellvalue)
-        {
-            switch (cellvalue)
-            {
-                case PicrossPuzzle.CellValue.Empty:
-                    return ' ';
-                case PicrossPuzzle.CellValue.Filled:
-                    return '#';
-                case PicrossPuzzle.CellValue.Crossed:
-                    return 'x';
-                default:
-                    return ' ';
-            }
-        }
-
         static void Main(string[] args)
         {
             int[][] linesValue = new int[5][];
@@ -53,14 +38,7 @@ namespace PicrossSolverCLI
             sw.Stop();
             Console.WriteLine("Time to solve 5x5: {0} ms", sw.ElapsedMilliseconds);
 
-            for (int y = 0; y < puzzle.Size.Height; y++)
-            {
-                for (int x = 0; x < puzzle.Size.Width; x++)
-                {
-                    Console.Write(CellValue2Char(puzzle.Cells[y, x]));
-                }
-                Console.WriteLine();
-            }
+            Console.WriteLine(puzzle);
 
             linesValue = new int[7][];
             linesValue[0] = new int[] { 3 };
@@ -90,14 +68,7 @@ namespace PicrossSolverCLI
             sw.Stop();
             Console.WriteLine("Time to solve 7x7: {0} ms", sw.ElapsedMilliseconds);
 
-            for (int y = 0; y < puzzle.Size.Height; y++)
-            {
-                for (int x = 0; x < puzzle.Size.Width; x++)
-                {
-                    Console.Write(CellValue2Char(puzzle.Cells[y, x]));
-                }
-                Console.WriteLine();
-            }
+            Console.WriteLine(puzzle);
 
         }
     }
