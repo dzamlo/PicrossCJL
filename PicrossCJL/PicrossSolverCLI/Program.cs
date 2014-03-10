@@ -3,56 +3,102 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PicrossCJL;
+using System.Diagnostics;
 
 namespace PicrossSolverCLI
 {
     class Program
     {
+        static char CellValue2Char(PicrossPuzzle.CellValue cellvalue)
+        {
+            switch (cellvalue)
+            {
+                case PicrossPuzzle.CellValue.Empty:
+                    return ' ';
+                case PicrossPuzzle.CellValue.Filled:
+                    return '#';
+                case PicrossPuzzle.CellValue.Crossed:
+                    return 'x';
+                default:
+                    return ' ';
+            }
+        }
+
         static void Main(string[] args)
         {
-            /*int[][] linesValue = new int[2][];
-            linesValue[0] = new int[] {1};
-            linesValue[1] = new int[] {1};
+            int[][] linesValue = new int[5][];
+            linesValue[0] = new int[] { 3 };
+            linesValue[1] = new int[] { 4 };
+            linesValue[2] = new int[] { 1 };
+            linesValue[3] = new int[] { 1, 3 };
+            linesValue[4] = new int[] { 2 };
 
-            int[][] columnsValue = new int[2][];
-            columnsValue[0] = new int[] {1};
-            columnsValue[1] = new int[] {1};
+            int[][] columnsValue = new int[5][];
+            columnsValue[0] = new int[] { 1, 1 };
+            columnsValue[1] = new int[] { 2 };
+            columnsValue[2] = new int[] { 4 };
+            columnsValue[3] = new int[] { 2, 2 };
+            columnsValue[4] = new int[] { 2 };
 
-            PicrossPuzzle.CellValue[,] cellsValue = new PicrossPuzzle.CellValue[,] {};
+            PicrossPuzzle.CellValue[,] cellsValue = new PicrossPuzzle.CellValue[5, 5];
 
             PicrossPuzzle puzzle = new PicrossPuzzle(cellsValue, linesValue, columnsValue);
 
             PicrossSolver solver = new PicrossSolver();
 
+            Stopwatch sw = new Stopwatch();
+
+            sw.Restart();
             solver.Solve(puzzle);
-            Console.WriteLine(puzzle);*/
+            sw.Stop();
+            Console.WriteLine("Time to solve 5x5: {0} ms", sw.ElapsedMilliseconds);
 
-            PicrossPuzzle puzzle = new PicrossPuzzle(new PicrossPuzzle.CellValue[4, 4], new int[4][], new int[4][]);
-            
-            puzzle.Cells[0, 0] = PicrossPuzzle.CellValue.Filled;
-            puzzle.Cells[1, 0] = PicrossPuzzle.CellValue.Filled;
-            puzzle.Cells[2, 0] = PicrossPuzzle.CellValue.Empty;
-            puzzle.Cells[3, 0] = PicrossPuzzle.CellValue.Filled;
+            for (int y = 0; y < puzzle.Size.Height; y++)
+            {
+                for (int x = 0; x < puzzle.Size.Width; x++)
+                {
+                    Console.Write(CellValue2Char(puzzle.Cells[y, x]));
+                }
+                Console.WriteLine();
+            }
 
-            puzzle.Cells[0, 1] = PicrossPuzzle.CellValue.Filled;
-            puzzle.Cells[1, 1] = PicrossPuzzle.CellValue.Crossed;
-            puzzle.Cells[2, 1] = PicrossPuzzle.CellValue.Filled;
-            puzzle.Cells[3, 1] = PicrossPuzzle.CellValue.Filled;
+            linesValue = new int[7][];
+            linesValue[0] = new int[] { 3 };
+            linesValue[1] = new int[] { 1, 2, 1 };
+            linesValue[2] = new int[] { 2, 3 };
+            linesValue[3] = new int[] { 2, 2 };
+            linesValue[4] = new int[] { 2, 1 };
+            linesValue[5] = new int[] { 1, 2, 1 };
+            linesValue[6] = new int[] { 3, 1 };
 
-            puzzle.Cells[0, 2] = PicrossPuzzle.CellValue.Empty;
-            puzzle.Cells[1, 2] = PicrossPuzzle.CellValue.Filled;
-            puzzle.Cells[2, 2] = PicrossPuzzle.CellValue.Crossed;
-            puzzle.Cells[3, 2] = PicrossPuzzle.CellValue.Crossed;
+            columnsValue = new int[7][];
+            columnsValue[0] = new int[] { 2, 3 };
+            columnsValue[1] = new int[] { 1, 3, 1 };
+            columnsValue[2] = new int[] { 1, 1, 2 };
+            columnsValue[3] = new int[] { 2, 2 };
+            columnsValue[4] = new int[] { 2, 1 };
+            columnsValue[5] = new int[] { 2, 1 };
+            columnsValue[6] = new int[] { 3 };
 
-            puzzle.Cells[0, 3] = PicrossPuzzle.CellValue.Filled;
-            puzzle.Cells[1, 3] = PicrossPuzzle.CellValue.Filled;
-            puzzle.Cells[2, 3] = PicrossPuzzle.CellValue.Filled;
-            puzzle.Cells[3, 3] = PicrossPuzzle.CellValue.Empty;
+            cellsValue = new PicrossPuzzle.CellValue[7, 7];
 
-            int[][] linesValues = puzzle.BitmapToLinesValue(puzzle.Cells);
-            int[][] columnValues = puzzle.BitmapToColumnsValue(puzzle.Cells);
+            puzzle = new PicrossPuzzle(cellsValue, linesValue, columnsValue);
 
-            Console.WriteLine(puzzle.ToString());
+            sw.Restart();
+            solver.Solve(puzzle);
+
+            sw.Stop();
+            Console.WriteLine("Time to solve 7x7: {0} ms", sw.ElapsedMilliseconds);
+
+            for (int y = 0; y < puzzle.Size.Height; y++)
+            {
+                for (int x = 0; x < puzzle.Size.Width; x++)
+                {
+                    Console.Write(CellValue2Char(puzzle.Cells[y, x]));
+                }
+                Console.WriteLine();
+            }
+
         }
     }
 }

@@ -39,7 +39,9 @@ namespace PicrossCJL
         #region Fields & Properties
         private CellValue[,] _cells;
         private int[][] _linesValues;
+        protected int[] _nbCrossedByLines;
         private int[][] _columnsValues;
+        protected int[] _nbCrossedByColumns;
 
         public CellValue[,] Cells
         {
@@ -52,6 +54,7 @@ namespace PicrossCJL
             get { return this._linesValues; }
             private set { this._linesValues = value; }
         }
+
 
         public int[][] ColumnsValues
         {
@@ -75,7 +78,7 @@ namespace PicrossCJL
         /// </summary>
         /// <param name="puzzle"></param>
         public PicrossPuzzle(PicrossPuzzle puzzle)
-            : this(puzzle.Cells, puzzle.LinesValues, puzzle.ColumnsValues)
+            : this(puzzle.Cells, puzzle.LinesValues, puzzle.ColumnsValues, puzzle._nbCrossedByLines, puzzle._nbCrossedByColumns)
         { } // No code
 
         /// <summary>
@@ -84,11 +87,34 @@ namespace PicrossCJL
         /// <param name="cells"></param>
         /// <param name="linesValues"></param>
         /// <param name="columnsValues"></param>
-        public PicrossPuzzle(CellValue[,] cells, int[][] linesValues, int[][] columnsValues)
+        public PicrossPuzzle(CellValue[,] cells, int[][] linesValues, int[][] columnsValues, int[] nbCrossedByLines = null, int[] nbCrossedByColumns = null)
         {
             this.Cells = (CellValue[,])cells.Clone();
             this.LinesValues = linesValues;
             this.ColumnsValues = columnsValues;
+
+            if (nbCrossedByLines != null)
+                _nbCrossedByLines = nbCrossedByLines;
+            else
+            {
+                _nbCrossedByLines = new int[LinesValues.Length];
+                for (int i = 0; i < LinesValues.Length; i++)
+                {
+                    _nbCrossedByLines[i] = LinesValues[i].Sum();
+                }
+            }
+
+            if (nbCrossedByColumns != null)
+                _nbCrossedByColumns = nbCrossedByColumns;
+            else
+            {
+                _nbCrossedByColumns = new int[ColumnsValues.Length];
+                for (int i = 0; i < ColumnsValues.Length; i++)
+                {
+                    _nbCrossedByColumns[i] = ColumnsValues[i].Sum();
+                }
+            }
+
         }
 
         /// <summary>
@@ -367,92 +393,67 @@ namespace PicrossCJL
         {
             Size s = Size;
             int w = s.Width;
-            int h = s.Height;
 
             int[] values = LinesValues[lineNo];
             int nbValues = values.Length;
-            int currentRunIdx = -1;
+
+            List<int> runLengths = new List<int>();
+
             int currentRunLength = 0;
-            int emptyRunLength = 0;
-            CellValue previousCellValue = CellValue.Crossed;
-            CellValue currentCellValue;
+            int nbFilled = 0;
+            int nbCrossed = 0;
 
             for (int x = 0; x < w; x++)
             {
-                currentCellValue = Cells[lineNo, x];
-                switch (currentCellValue)
+                CellValue currentCellValue = Cells[lineNo, x];
+                if (currentCellValue == CellValue.Filled)
                 {
-                    case CellValue.Empty:
-                        emptyRunLength += 1;
-                        switch (previousCellValue)
-                        {
-                            case CellValue.Empty:
-                                //TODO: complete
-                                break;
-                            case CellValue.Filled:
-                                //TODO: complete
-                                break;
-                            case CellValue.Crossed:
-                                //TODO: complete
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-
-                    case CellValue.Filled:
-                        switch (previousCellValue)
-                        {
-                            case CellValue.Empty:
-                                //TODO: complete
-                                break;
-                            case CellValue.Filled:
-                                currentRunLength += 1;
-                                if (currentRunLength > values[currentRunIdx])
-                                    return PuzzleState.Incorrect;
-                                break;
-                            case CellValue.Crossed:
-                                currentRunLength = 0;
-                                currentRunIdx += 1;
-                                break;
-                            default:
-                                break;
-                        }
-                        emptyRunLength = 0;
-                        break;
-
-                    case CellValue.Crossed:
-                        switch (previousCellValue)
-                        {
-                            case CellValue.Empty:
-                                //TODO: complete
-                                break;
-                            case CellValue.Filled:
-                                if (currentRunLength != values[currentRunIdx])
-                                    return PuzzleState.Incorrect;
-                                break;
-                            case CellValue.Crossed:
-                                
-                                break;
-                            default:
-                                break;
-                        }
-                        emptyRunLength = 0;
-                        break;
-
-                    default:
-                        break;
+                    currentRunLength += 1;
+                    nbFilled += 1;
                 }
-
-                previousCellValue = currentCellValue;
+                else
+                {
+                    if (currentCellValue == CellValue.Crossed)
+                    {
+                        nbCrossed += 1;
+                    }
+                    if (currentRunLength > 0)
+                    {
+                        runLengths.Add(currentRunLength);
+                        currentRunLength = 0;
+                    }
+                }
             }
 
-            if (currentRunIdx == currentRunLength || (currentRunIdx == currentRunLength - 1 && currentRunLength == values[currentRunIdx]))
+            if (nbFilled > _nbCrossedByLines[lineNo] || nbCrossed > w - _nbCrossedByLines[lineNo])
+                return PuzzleState.Incorrect;
+
+
+            if (currentRunLength > 0)
             {
+                runLengths.Add(currentRunLength);
+                currentRunLength = 0;
+            }
+
+            if (runLengths.Count == values.Length)
+            {
+                for (int i = 0; i < runLengths.Count; i++)
+                {
+                    if (runLengths[i] != values[i])
+                    {
+                        // PuzzleState.Incomplete || PuzzleState.Incorrect
+                        // TODO: determine when PuzzleState is Incorrect
+                        return PuzzleState.Incomplete;
+                    }
+                }
                 return PuzzleState.Finished;
             }
-
-            return PuzzleState.Incomplete;
+            else
+            {
+                // PuzzleState.Incomplete || PuzzleState.Incorrect
+                // TODO: determine when PuzzleState is Incorrect
+                return PuzzleState.Incomplete;
+            }
         }
 
         /// <summary>
@@ -462,9 +463,69 @@ namespace PicrossCJL
         /// <returns>PuzzleState enum</returns>
         public PuzzleState CheckPuzzleColumn(int columnNo)
         {
+            Size s = Size;
+            int h = s.Height;
 
+            int[] values = ColumnsValues[columnNo];
+            int nbValues = values.Length;
 
-            return PuzzleState.Incomplete;
+            List<int> runLengths = new List<int>();
+
+            int currentRunLength = 0;
+
+            int nbFilled = 0;
+            int nbCrossed = 0;
+
+            for (int y = 0; y < h; y++)
+            {
+                CellValue currentCellValue = Cells[y, columnNo];
+                if (currentCellValue == CellValue.Filled)
+                {
+                    currentRunLength += 1;
+                    nbFilled += 1;
+                }
+                else
+                {
+                    if (currentCellValue == CellValue.Crossed)
+                    {
+                        nbCrossed += 1;
+                    }
+                    if (currentRunLength > 0)
+                    {
+                        runLengths.Add(currentRunLength);
+                        currentRunLength = 0;
+                    }
+                }
+            }
+
+            if (nbFilled > _nbCrossedByColumns[columnNo] || nbCrossed > h - _nbCrossedByColumns[columnNo])
+                return PuzzleState.Incorrect;
+
+            if (currentRunLength > 0)
+            {
+                runLengths.Add(currentRunLength);
+                currentRunLength = 0;
+            }
+
+            if (runLengths.Count == values.Length)
+            {
+                for (int i = 0; i < runLengths.Count; i++)
+                {
+                    if (runLengths[i] != values[i])
+                    {
+                        // PuzzleState.Incomplete || PuzzleState.Incorrect
+                        // TODO: determine when PuzzleState is Incorrect
+                        return PuzzleState.Incomplete;
+                    }
+                }
+                return PuzzleState.Finished;
+            }
+            else
+            {
+                // PuzzleState.Incomplete || PuzzleState.Incorrect
+                // TODO: determine when PuzzleState is Incorrect
+                return PuzzleState.Incomplete;
+            }
         }
 
         /// <summary>
