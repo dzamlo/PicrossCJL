@@ -153,7 +153,7 @@ namespace PicrossCJL
             {
                 for (int x = 0; x < this.Size.Width; x++)
                 {
-                    switch (this.Cells[x, y])
+                    switch (this.Cells[y, x])
                     {
                         case CellValue.Filled:  str += "#";
                             break;
