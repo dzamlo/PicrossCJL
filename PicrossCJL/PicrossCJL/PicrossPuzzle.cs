@@ -535,7 +535,7 @@ namespace PicrossCJL
                 if (line == string.Empty)
                     i--;
                 else
-                    values[i] = line.Split(',').Select(int.Parse).ToArray();
+                    values[i] = line.Split(',').Select(int.Parse).Where(n => n>0).ToArray();
             }
 
             return values;
