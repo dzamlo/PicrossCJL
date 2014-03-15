@@ -29,7 +29,7 @@ namespace PicrossSolverCLI
             }
 
             Console.WriteLine("Loading of the puzzle");
-            if (filename.EndsWith(".non"))
+            if (filename.EndsWith(".non") || filename.EndsWith(".txt"))
                 puzzle = PicrossPuzzle.LoadFromNonFile(filename);
             else
                 puzzle = PicrossPuzzle.LoadXmlFile(filename);

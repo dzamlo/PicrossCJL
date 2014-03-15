@@ -50,7 +50,7 @@ namespace PicrossCJLGUI
 
         public void LoadFromFile(string filename)
         {
-            if (filename.EndsWith(".non"))
+            if (filename.EndsWith(".non") || filename.EndsWith(".txt"))
                 this.Puzzle = PicrossPuzzle.LoadFromNonFile(filename);
             else
                 this.Puzzle = PicrossPuzzle.LoadXmlFile(filename);

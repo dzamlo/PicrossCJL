@@ -69,26 +69,26 @@
             // sauvegardezToolStripMenuItem
             // 
             this.sauvegardezToolStripMenuItem.Name = "sauvegardezToolStripMenuItem";
-            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.sauvegardezToolStripMenuItem.Text = "Save...";
             this.sauvegardezToolStripMenuItem.Click += new System.EventHandler(this.sauvegardezToolStripMenuItem_Click);
             // 
             // chargerToolStripMenuItem
             // 
             this.chargerToolStripMenuItem.Name = "chargerToolStripMenuItem";
-            this.chargerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.chargerToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.chargerToolStripMenuItem.Text = "Load...";
             this.chargerToolStripMenuItem.Click += new System.EventHandler(this.chargerToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(106, 6);
             // 
             // quitterToolStripMenuItem
             // 
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.quitterToolStripMenuItem.Text = "Close";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
@@ -116,7 +116,7 @@
             // 
             // ofd
             // 
-            this.ofd.Filter = "Fichiers XML|*.xml|Fichiers non|*.non";
+            this.ofd.Filter = "Fichiers XML|*.xml|Fichiers non|*.non;*.txt";
             // 
             // sfd
             // 
