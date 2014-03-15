@@ -19,14 +19,14 @@ namespace PicrossCJLGUI
 
         public PicrossController()
         {
-            this.Puzzle = new PicrossPuzzle(new PicrossPuzzle.CellValue[4, 4], new int[4][], new int[4][]);
+            this.Puzzle = PicrossPuzzle.Empty(4,4);
         }
 
         public int GetNbMaxColumnsValues()
         {
             int maxValue = 0;
             for (int i = 0; i < this.Puzzle.ColumnsValues.GetLength(0); i++)
-                maxValue = (maxValue < this.Puzzle.ColumnsValues[i].Length) ?this.Puzzle.ColumnsValues[i].Length : maxValue;
+                maxValue = (maxValue < this.Puzzle.ColumnsValues[i].Length) ? this.Puzzle.ColumnsValues[i].Length : maxValue;
             return maxValue;
         }
 
@@ -45,7 +45,22 @@ namespace PicrossCJLGUI
 
         public PicrossPuzzle.CellValue GetCellState(int x, int y)
         {
-            return this.Puzzle.Cells[x, y];
+            return this.Puzzle.Cells[y, x];
+        }
+
+        public void LoadFromFile(string filename)
+        {
+            if (filename.EndsWith(".non"))
+                this.Puzzle = PicrossPuzzle.LoadFromNonFile(filename);
+            else
+                this.Puzzle = PicrossPuzzle.LoadXmlFile(filename);
+
+        }
+
+        internal void Solve()
+        {
+            PicrossSolver solver = new PicrossSolver();
+            solver.Solve(this.Puzzle);
         }
     }
 }

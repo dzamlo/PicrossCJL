@@ -15,6 +15,22 @@ using System.Text;
 
 namespace PicrossCJLGUI
 {
+
+    /*TODO:
+     * redimensionner panel + scrollbar
+     * charger image
+     * indiquer ligne/colomne (in)correcte et/ou puzzle terminé
+     * intégrer solver dans GUI, backgroudworker ?
+     * pour l'instant un seul chiffre des linesValue et columnsValue sont afficher, par example 2 au lieu de 20 su l'exemple 20x20
+     *     edit: en fait sa depand les chiffre, surement un problème de taiile du rectangle dans lequel on affiche les valeurs
+     * s'inspirer de http://www.puzzle-nonograms.com/
+     * verfifier ligne colone inverser partout
+     * integrer from bmp dans la gui
+     * implémenter save
+     * Ceratin calculs/instatiation sont fait plusisuers fois de manière inutiles
+     * + checker sur moodle fonctionalité manquante
+     * */
+
     public partial class Form1 : Form
     {
         #region Constants
@@ -25,7 +41,7 @@ namespace PicrossCJLGUI
 
         #region Fields & Properties
         private Rectangle[,] _cells;
-        private Graphics g;
+        //private Graphics g;
         private PicrossController _controller;
         
 
@@ -55,8 +71,8 @@ namespace PicrossCJLGUI
         public Form1()
         {
             InitializeComponent();
-            g = panel1.CreateGraphics();
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            //g = panel1.CreateGraphics();
+           // g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
             this.Controller = new PicrossController();
             this.Draw();
@@ -91,7 +107,7 @@ namespace PicrossCJLGUI
         private void chargerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
-                this.Controller.Puzzle = PicrossPuzzle.LoadXmlFile(ofd.FileName);
+                this.Controller.LoadFromFile(ofd.FileName);
 
             this.UpdateView();
         }
@@ -137,7 +153,9 @@ namespace PicrossCJLGUI
         /// <param name="e"></param>
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            this.g.Clear(Color.White);
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            g.Clear(Color.White);
             CellsRectangle = new Rectangle[this.Controller.GetCellSize().Width, this.Controller.GetCellSize().Height];
 
             #region Draw columns values
@@ -178,7 +196,7 @@ namespace PicrossCJLGUI
             {
                 for (int y = 0; y < this.Controller.GetCellSize().Height; y++)
                 {
-                    Rectangle r = new Rectangle(x * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, y * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT);
+                    Rectangle r = new Rectangle(x * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxLinesValues() * PIXEL_PER_DIGIT, y * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT);
                     CellsRectangle[x, y] = r;
                     switch (this.Controller.GetCellState(x, y))
                     {
@@ -210,10 +228,16 @@ namespace PicrossCJLGUI
            for (int x = 0; x < this.Controller.GetCellSize().Width; x++)
                 for (int y = 0; y < this.Controller.GetCellSize().Height; y++)
                     if (CellsRectangle[x, y].Contains(e.Location))
-                        this.Controller.Puzzle.Cells[x, y] = (PicrossPuzzle.CellValue)(((int)this.Controller.Puzzle.Cells[x, y] + 1) % 3);
+                        this.Controller.Puzzle.Cells[y, x] = (PicrossPuzzle.CellValue)(((int)this.Controller.Puzzle.Cells[y, x] + 1) % 3);
 
            this.UpdateView();
         }
         #endregion
+
+        private void solveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Controller.Solve();
+            this.UpdateView();
+        }
     }
 }

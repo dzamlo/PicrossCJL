@@ -35,9 +35,11 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aProposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.solverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.solveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1 = new PicrossCJLGUI.DoubleBufferedPanel();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,7 +47,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fichierToolStripMenuItem,
-            this.aProposToolStripMenuItem});
+            this.aProposToolStripMenuItem,
+            this.solverToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(584, 24);
@@ -96,9 +99,24 @@
             this.aProposToolStripMenuItem.Text = "About";
             this.aProposToolStripMenuItem.Click += new System.EventHandler(this.aProposToolStripMenuItem_Click);
             // 
+            // solverToolStripMenuItem
+            // 
+            this.solverToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.solveToolStripMenuItem});
+            this.solverToolStripMenuItem.Name = "solverToolStripMenuItem";
+            this.solverToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.solverToolStripMenuItem.Text = "Solver";
+            // 
+            // solveToolStripMenuItem
+            // 
+            this.solveToolStripMenuItem.Name = "solveToolStripMenuItem";
+            this.solveToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
+            this.solveToolStripMenuItem.Text = "Solve";
+            this.solveToolStripMenuItem.Click += new System.EventHandler(this.solveToolStripMenuItem_Click);
+            // 
             // ofd
             // 
-            this.ofd.Filter = "Fichiers XML|*.xml";
+            this.ofd.Filter = "Fichiers XML|*.xml|Fichiers non|*.non";
             // 
             // sfd
             // 
@@ -123,6 +141,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(584, 562);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
@@ -148,7 +167,9 @@
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.SaveFileDialog sfd;
         private System.Windows.Forms.ToolStripMenuItem aProposToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
+        private DoubleBufferedPanel panel1;
+        private System.Windows.Forms.ToolStripMenuItem solverToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem solveToolStripMenuItem;
 
 
     }
