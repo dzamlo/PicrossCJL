@@ -70,12 +70,28 @@ namespace PicrossCJL
             set { this._columnsValues = value; }
         }
 
+        public int Width
+        {
+            get
+            {
+                return ColumnsValues.GetLength(0);
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return LinesValues.GetLength(0);
+            }
+        }
+
         public Size Size
         {
             get
             {
                 // GetLength(0) -> width, GetLenght(1) -> height
-                return new Size(this.Cells.GetLength(0), this.Cells.GetLength(1));
+                return new Size(Width, Height);
             }
         }
         #endregion
@@ -97,18 +113,14 @@ namespace PicrossCJL
         /// <param name="columnsValues"></param>
         public PicrossPuzzle(CellValue[,] cells, int[][] linesValues, int[][] columnsValues, int[] nbCrossedByLines = null, int[] nbCrossedByColumns = null)
         {
-            this.Cells = (CellValue[,])cells.Clone();
+            if(cells == null)
+                this.Cells = new CellValue[linesValues.GetLength(0), columnsValues.GetLength(0)];
+            else
+               this.Cells = (CellValue[,])cells.Clone();
             this.LinesValues = linesValues;
             this.ColumnsValues = columnsValues;
-
-            for (int x = 0; x < this.Cells.GetLength(0); x++)
-                for (int y = 0; y < this.Cells.GetLength(1); y++)
-                    this.Cells[x, y] = CellValue.Empty;
-
-            this.ColumnsValues = this.BitmapToColumnsValue(this.Cells);
-            this.LinesValues = this.BitmapToLinesValue(this.Cells);
-
             
+
             if (nbCrossedByLines != null)
                 _nbCrossedByLines = nbCrossedByLines;
             else
@@ -151,6 +163,31 @@ namespace PicrossCJL
             this.LinesValues = this.BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
             this.ColumnsValues = this.BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
         }
+
+        /// <summary>
+        /// Create an empty puzzle with a specified size
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public static PicrossPuzzle Empty(int width, int height)
+        {
+            int[][] linesValues = new int[height][];
+            int[][] columnsValues = new int[height][];
+
+            for (int x = 0; x < width; x++)
+            {
+                linesValues[x] = new int[0];
+            }
+
+            for (int y = 0; y < height; y++)
+            {
+                columnsValues[y] = new int[0];
+            }
+
+            return new PicrossPuzzle(null, linesValues, columnsValues);
+        }
+
         #endregion
 
         #region Methods
@@ -172,9 +209,9 @@ namespace PicrossCJL
                     {
                         case CellValue.Filled:  str += "#";
                             break;
-                        case CellValue.Empty:   str += "-";
+                        case CellValue.Empty:   str += "?";
                             break;
-                        case CellValue.Crossed: str += "X";
+                        case CellValue.Crossed: str += ".";
                             break;
                     }
                 }
@@ -409,18 +446,16 @@ namespace PicrossCJL
             int nbLines = 0;
             int nbColumns = 0;
             int index = 0;
-            string xmlString = string.Empty;
+            string xmlString;
             List<int> values;
-            PicrossPuzzle puzzle;
             StringBuilder sb = new StringBuilder();
+            int[][] linesValues;
+            int[][] columnsValues;
 
             using (StreamReader sr = new StreamReader(xmlPath))
             {
-                String line;
-                while ((line = sr.ReadLine()) != null)
-                    sb.AppendLine(line);
+                xmlString = sr.ReadToEnd();
             }
-            xmlString = sb.ToString();
 
             sb = new StringBuilder();
             using (XmlReader reader = XmlReader.Create(new StringReader(xmlString)))
@@ -435,7 +470,10 @@ namespace PicrossCJL
                 nbColumns = Convert.ToInt16(reader.Value);
                 sb.AppendLine("Number of lines: " + nbColumns);
 
-                puzzle = new PicrossPuzzle(new PicrossPuzzle.CellValue[nbColumns, nbLines], new int[nbLines][], new int[nbColumns][]);
+                linesValues = new int[nbLines][];
+                columnsValues = new int[nbColumns][];
+
+
                 while (reader.ReadToFollowing("Line"))
                 {
                     reader.MoveToFirstAttribute();
@@ -447,10 +485,13 @@ namespace PicrossCJL
                     if (indices != string.Empty)
                     {
                         values = new List<int>();
-                        foreach (string s in new List<string>(indices.Split(' ')))
+                        foreach (string s in indices.Split(' '))
                             values.Add(Convert.ToInt16(s));
-
-                        puzzle.LinesValues[index] = values.ToArray();
+                        linesValues[index] = values.ToArray();
+                    }
+                    else
+                    {
+                        linesValues[index] = new int[0];
                     }
                 }
             }
@@ -469,14 +510,67 @@ namespace PicrossCJL
                     if (indices != string.Empty)
                     {
                         values = new List<int>();
-                        foreach (string s in new List<string>(indices.Split(' ')))
+                        foreach (string s in indices.Split(' '))
                             values.Add(Convert.ToInt16(s));
 
-                        puzzle.ColumnsValues[index] = values.ToArray();
+                        columnsValues[index] = values.ToArray();
+                    }
+                    else
+                    {
+                        columnsValues[index] = new int[0];
                     }
                 }
             }
-            return puzzle;
+            return new PicrossPuzzle(null, linesValues, columnsValues);
+        }
+
+
+        static int[][] ReadValuesFromNonFile(StreamReader sr, int size)
+        {
+            int[][] values = new int[size][];
+
+            for (int i = 0; i < size; i++)
+            {
+                string line = sr.ReadLine();
+                if (line == string.Empty)
+                    i--;
+                else
+                    values[i] = line.Split(',').Select(int.Parse).ToArray();
+            }
+
+            return values;
+        }
+
+        /// <summary>
+        /// Load a puzzle from a Non file. The format is specified on http://www.comp.lancs.ac.uk/~ss/nonogram/fmt2
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static PicrossPuzzle LoadFromNonFile(string filepath)
+        {
+            int[][] linesValues = null;
+            int[][] columnsValues = null;
+            int width = 0;
+            int height = 0;
+
+            using (StreamReader sr = new StreamReader(filepath))
+            {
+                while (!sr.EndOfStream)
+                {
+                    string line = sr.ReadLine();
+                    if (line.StartsWith("width"))
+                        width = int.Parse(line.Substring(6));
+                    else if (line.StartsWith("height"))
+                        height = int.Parse(line.Substring(7));
+                    else if (line.StartsWith("rows"))
+                        linesValues = ReadValuesFromNonFile(sr, height);
+                    else if (line.StartsWith("columns"))
+                        columnsValues = ReadValuesFromNonFile(sr, width);
+                }
+            }
+
+            return new PicrossPuzzle(null, linesValues, columnsValues);
+
         }
 
         /// <summary>
@@ -538,6 +632,8 @@ namespace PicrossCJL
                     {
                         // PuzzleState.Incomplete || PuzzleState.Incorrect
                         // TODO: determine when PuzzleState is Incorrect
+                        if (nbFilled + nbCrossed >= w)
+                            return PuzzleState.Incorrect;
                         return PuzzleState.Incomplete;
                     }
                 }
@@ -547,6 +643,8 @@ namespace PicrossCJL
             {
                 // PuzzleState.Incomplete || PuzzleState.Incorrect
                 // TODO: determine when PuzzleState is Incorrect
+                if (nbFilled + nbCrossed >= w)
+                    return PuzzleState.Incorrect;
                 return PuzzleState.Incomplete;
             }
         }
@@ -610,6 +708,8 @@ namespace PicrossCJL
                     {
                         // PuzzleState.Incomplete || PuzzleState.Incorrect
                         // TODO: determine when PuzzleState is Incorrect
+                        if (nbFilled + nbCrossed >= h)
+                            return PuzzleState.Incorrect;
                         return PuzzleState.Incomplete;
                     }
                 }
@@ -619,6 +719,8 @@ namespace PicrossCJL
             {
                 // PuzzleState.Incomplete || PuzzleState.Incorrect
                 // TODO: determine when PuzzleState is Incorrect
+                if (nbFilled + nbCrossed >= h)
+                    return PuzzleState.Incorrect;
                 return PuzzleState.Incomplete;
             }
         }
@@ -627,7 +729,7 @@ namespace PicrossCJL
         /// Method to get the current puzzle state
         /// </summary>
         /// <returns>PuzzleState enum</returns>
-        public PuzzleState GetPuzzleState(int currentY = 0)
+        public PuzzleState GetPuzzleState(int currentX = 0, int currentY = 0)
         {
             Size s = Size;
             int w = s.Width;
@@ -637,7 +739,7 @@ namespace PicrossCJL
             bool finished = true;
 
             // first check each line
-            for (int y = currentY; y < h && !incorrect && finished; y++)
+            for (int y = 0; y < h && !incorrect && finished; y++)
             {
                 switch (CheckPuzzleLine(y))
                 {
@@ -683,5 +785,7 @@ namespace PicrossCJL
         }
 
         #endregion
+
+
     }
 }
