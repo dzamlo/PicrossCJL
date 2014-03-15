@@ -416,16 +416,14 @@ namespace PicrossCJL
         /// Load from a xml serialization file
         /// </summary>
         /// <param name="filename">Xml filename</param>
-        public void LoadFromFile(string filename)
+        public static  PicrossPuzzle LoadFromFile(string filename)
         {
             // Reference : http://msdn.microsoft.com/en-us/library/4abbf6k0(v=vs.110).aspx
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
             PicrossPuzzle puzzleTmp = (PicrossPuzzle)formatter.Deserialize(stream);
-            this.Cells = puzzleTmp.Cells;
-            this.LinesValues = puzzleTmp.LinesValues;
-            this.ColumnsValues = puzzleTmp.ColumnsValues;
             stream.Close();
+            return puzzleTmp;
         }
 
         /// <summary>

@@ -280,7 +280,7 @@ namespace TestPicrossPuzzle
             PicrossPuzzle puzzle = null; // TODO: initialisez à une valeur appropriée
             PicrossPuzzle target = new PicrossPuzzle(puzzle); // TODO: initialisez à une valeur appropriée
             string filename = string.Empty; // TODO: initialisez à une valeur appropriée
-            target.LoadFromFile(filename);
+            //target.LoadFromFile(filename);
             Assert.Inconclusive("Une méthode qui ne retourne pas une valeur ne peut pas être vérifiée.");
         }
 
