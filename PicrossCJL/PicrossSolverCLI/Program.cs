@@ -9,85 +9,38 @@ namespace PicrossSolverCLI
 {
     class Program
     {
+        const string DEFAULT_FILENAME = "exemple_30x30.xml";
+
         static void Main(string[] args)
         {
-            int[][] linesValue = new int[2][];
-            linesValue[0] = new int[] { 1 };
-            linesValue[1] = new int[] { 1 };
-
-            int[][] columnsValue = new int[2][];
-            columnsValue[0] = new int[] { 1 };
-            columnsValue[1] = new int[] { 1 };
-
-            PicrossPuzzle.CellValue[,] cellsValue = new PicrossPuzzle.CellValue[2, 2];
-
-            PicrossPuzzle puzzle = new PicrossPuzzle(cellsValue, linesValue, columnsValue);
-
+            Stopwatch sw = new Stopwatch();
+            PicrossPuzzle puzzle;
             PicrossSolver solver = new PicrossSolver();
 
-            Stopwatch sw = new Stopwatch();
+            string filename;
+            if (args.Length >= 1)
+                filename = args[0];
+            else
+            {
+                Console.Write("Puzzle's file [{0}]:", DEFAULT_FILENAME);
+                filename = Console.ReadLine();
+                if (filename == string.Empty)
+                    filename = DEFAULT_FILENAME;
+            }
 
+            Console.WriteLine("Loading of the puzzle");
+            if (filename.EndsWith(".non"))
+                puzzle = PicrossPuzzle.LoadFromNonFile(filename);
+            else
+                puzzle = PicrossPuzzle.LoadXmlFile(filename);
+            Console.WriteLine("Start of the solving");
             sw.Restart();
             solver.Solve(puzzle);
             sw.Stop();
-            Console.WriteLine("Time to solve 2x2: {0} ms", sw.ElapsedMilliseconds);
-
+            Console.WriteLine("Time to solve the puzzle: {0} ms", sw.ElapsedMilliseconds);
             Console.WriteLine(puzzle);
-
-            linesValue = new int[5][];
-            linesValue[0] = new int[] { 3 };
-            linesValue[1] = new int[] { 4 };
-            linesValue[2] = new int[] { 1 };
-            linesValue[3] = new int[] { 1, 3 };
-            linesValue[4] = new int[] { 2 };
-
-            columnsValue = new int[5][];
-            columnsValue[0] = new int[] { 1, 1 };
-            columnsValue[1] = new int[] { 2 };
-            columnsValue[2] = new int[] { 4 };
-            columnsValue[3] = new int[] { 2, 2 };
-            columnsValue[4] = new int[] { 2 };
-
-            cellsValue = new PicrossPuzzle.CellValue[5, 5];
-
-            puzzle = new PicrossPuzzle(cellsValue, linesValue, columnsValue);
-
-            sw.Restart();
-            solver.Solve(puzzle);
-            sw.Stop();
-            Console.WriteLine("Time to solve 5x5: {0} ms", sw.ElapsedMilliseconds);
-
-            Console.WriteLine(puzzle);
-
-            linesValue = new int[7][];
-            linesValue[0] = new int[] { 3 };
-            linesValue[1] = new int[] { 1, 2, 1 };
-            linesValue[2] = new int[] { 2, 3 };
-            linesValue[3] = new int[] { 2, 2 };
-            linesValue[4] = new int[] { 2, 1 };
-            linesValue[5] = new int[] { 1, 2, 1 };
-            linesValue[6] = new int[] { 3, 1 };
-
-            columnsValue = new int[7][];
-            columnsValue[0] = new int[] { 2, 3 };
-            columnsValue[1] = new int[] { 1, 3, 1 };
-            columnsValue[2] = new int[] { 1, 1, 2 };
-            columnsValue[3] = new int[] { 2, 2 };
-            columnsValue[4] = new int[] { 2, 1 };
-            columnsValue[5] = new int[] { 2, 1 };
-            columnsValue[6] = new int[] { 3 };
-
-            cellsValue = new PicrossPuzzle.CellValue[7, 7];
-
-            puzzle = new PicrossPuzzle(cellsValue, linesValue, columnsValue);
-
-            sw.Restart();
-            solver.Solve(puzzle);
-
-            sw.Stop();
-            Console.WriteLine("Time to solve 7x7: {0} ms", sw.ElapsedMilliseconds);
-
-            Console.WriteLine(puzzle);
+            Console.WriteLine("Appuyez sur une touche pour continuer...");
+            Console.ReadLine();
 
         }
     }
