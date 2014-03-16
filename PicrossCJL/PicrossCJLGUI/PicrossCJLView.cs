@@ -12,7 +12,6 @@ using PicrossCJL;
 namespace PicrossCJLGUI
 {
     /*TODO:
-     * charger image
      * indiquer ligne/colomne (in)correcte et/ou puzzle terminé
      * intégrer solver dans GUI, backgroudworker ?
      * pour l'instant un seul chiffre des linesValue et columnsValue sont afficher, par example 2 au lieu de 20 su l'exemple 20x20
@@ -28,7 +27,7 @@ namespace PicrossCJLGUI
     public partial class Form1 : Form
     {
         #region Constants
-        const int PIXEL_PER_DIGIT = 20;
+        const int PIXEL_PER_DIGIT = 15;
         const int MARGIN_TOP_LEFT = 2;
         const string FONT_NAME = "Comic Sans Ms"; // RC: Comic Sans MS... really ?
         #endregion

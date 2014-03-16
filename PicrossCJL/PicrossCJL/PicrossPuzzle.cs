@@ -161,6 +161,7 @@ namespace PicrossCJL
         public PicrossPuzzle(Bitmap img, Size? size = null, int threshold = 128)
         {
             this.Cells = new CellValue[img.Width, img.Height];
+            this.Cells = this.BitmapToCellsValueArray(img, 128); // To show the solution on the screen
             this.LinesValues = this.BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
             this.ColumnsValues = this.BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
         }
@@ -378,12 +379,12 @@ namespace PicrossCJL
         {
             CellValue[,] cells = this.BitmapToCellsValueArray(bmp, threshold);
             int currentValue = 0;
-            int[][] columnsValues = new int[cells.GetLength(0)][];
+            int[][] columnsValues = new int[cells.GetLength(1)][];
             List<int> values = new List<int>();
 
-            for (int x = 0; x < cells.GetLength(1); x++)
+            for (int y = 0; y < cells.GetLength(1); y++)
             {
-                for (int y = 0; y < cells.GetLength(0); y++)
+                for (int x = 0; x < cells.GetLength(0); x++)
                 {
                     if (cells[x, y] != CellValue.Filled)
                     {
@@ -396,7 +397,7 @@ namespace PicrossCJL
                 }
                 if (currentValue > 0) values.Add(currentValue);
                 currentValue = 0;
-                columnsValues[x] = values.ToArray();
+                columnsValues[y] = values.ToArray();
                 values.Clear();
             }
 
@@ -411,12 +412,12 @@ namespace PicrossCJL
         public int[][] BitmapToColumnsValue(CellValue[,] cells)
         {
             int currentValue = 0;
-            int[][] columnsValues = new int[cells.GetLength(0)][];
+            int[][] columnsValues = new int[cells.GetLength(1)][];
             List<int> values = new List<int>();
 
-            for (int x = 0; x < cells.GetLength(0); x++)
+            for (int y = 0; y < cells.GetLength(0); y++)
             {
-                for (int y = 0; y < cells.GetLength(1); y++)
+                for (int x = 0; x < cells.GetLength(1); x++)
                 {
                     if (cells[x, y] != CellValue.Filled)
                     {
@@ -429,7 +430,7 @@ namespace PicrossCJL
                 }
                 if (currentValue > 0) values.Add(currentValue);
                 currentValue = 0;
-                columnsValues[x] = values.ToArray();
+                columnsValues[y] = values.ToArray();
                 values.Clear();
             }
 
