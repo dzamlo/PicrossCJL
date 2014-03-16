@@ -11,13 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPicrossPuzzle", "TestPi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F1573FF-B6C7-4A51-8DA3-E206E89EE366}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\Desktop\bmp_test_picross.bmp = ..\..\..\..\Desktop\bmp_test_picross.bmp
-		..\..\..\..\Desktop\fire.bmp = ..\..\..\..\Desktop\fire.bmp
+		PicrossSolverCLI\bmp_test_picross.bmp = PicrossSolverCLI\bmp_test_picross.bmp
+		PicrossSolverCLI\fire.bmp = PicrossSolverCLI\fire.bmp
 		Local.testsettings = Local.testsettings
 		PicrossCJL.vsmdi = PicrossCJL.vsmdi
-		..\..\..\..\Desktop\space_invaders.bmp = ..\..\..\..\Desktop\space_invaders.bmp
+		PicrossSolverCLI\space_invaders.bmp = PicrossSolverCLI\space_invaders.bmp
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-		..\..\..\..\Desktop\tux.bmp = ..\..\..\..\Desktop\tux.bmp
+		PicrossSolverCLI\tux.bmp = PicrossSolverCLI\tux.bmp
 	EndProjectSection
 EndProject
 Global
