@@ -105,6 +105,8 @@ namespace PicrossCJLGUI
                 this.Controller.LoadFromFile(ofd.FileName);
 
             this.UpdateView();
+            this.Width = (this.Controller.GetCellSize().Width + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + 60;
+            this.Height = (this.Controller.GetCellSize().Height + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + 100;
         }
 
         /// <summary>
@@ -217,8 +219,13 @@ namespace PicrossCJLGUI
 
            this.UpdateView();
         }
-        #endregion
+        
 
+        /// <summary>
+        /// Method to solve the picross
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void solveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Controller.Solve();
@@ -232,5 +239,6 @@ namespace PicrossCJLGUI
         {
 
         }
+        #endregion
     }
 }
