@@ -171,7 +171,7 @@ namespace PicrossCJL
         public PicrossPuzzle(Bitmap img, Size? size = null, int threshold = 128)
         {
             this.Cells = new CellValue[img.Width, img.Height];
-            this.Cells = this.BitmapToCellsValueArray(img, 128); // To show the solution on the screen
+            //this.Cells = this.BitmapToCellsValueArray(img, 128); // To show the solution on the screen
             this.LinesValues = this.BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
             this.ColumnsValues = this.BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
         }
@@ -264,34 +264,6 @@ namespace PicrossCJL
         /// <param name="bmp">Bitmap image</param>
         /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
         /// <returns>2D CellValue array</returns>
-        /*unsafe private CellValue[,] BitmapToCellsValueArray(Bitmap bmp, int threshold)
-        {
-            CellValue[,] cells = new CellValue[bmp.Width, bmp.Height];
-            Rectangle r = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            BitmapData bmpData = bmp.LockBits(r, ImageLockMode.ReadWrite, bmp.PixelFormat);
-            IntPtr px = bmpData.Scan0;
-
-            int stride = bmpData.Stride;
-            int offset = stride - (bmp.Width * 4);
-            int average = 0;
-            byte* ptrPx = (byte*)px;
-
-            for (int x = 0; x < bmp.Width; x++)
-            {
-                for (int y = 0; y < bmp.Height; y++)
-                {
-                    average = (ptrPx[0] + ptrPx[1] + ptrPx[2]) / 3;
-                    ptrPx += 4;
-                    cells[x, y] = (average >= threshold) ? CellValue.Filled : CellValue.Empty;
-                }
-                ptrPx += offset;
-            }
-
-            bmp.UnlockBits(bmpData);
-
-            return cells;
-        }*/
-
         private CellValue[,] BitmapToCellsValueArray(Bitmap bmp, int threshold)
         {
             int average = 0;
@@ -818,7 +790,5 @@ namespace PicrossCJL
         }
 
         #endregion
-
-
     }
 }
