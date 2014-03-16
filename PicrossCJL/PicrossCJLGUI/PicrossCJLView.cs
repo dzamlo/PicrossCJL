@@ -18,7 +18,6 @@ namespace PicrossCJLGUI
      *     edit: en fait sa depand les chiffre, surement un problème de taiile du rectangle dans lequel on affiche les valeurs
      * s'inspirer de http://www.puzzle-nonograms.com/
      * verfifier ligne colone inverser partout
-     * integrer from bmp dans la gui
      * implémenter save
      * Ceratin calculs/instatiation sont fait plusisuers fois de manière inutiles
      * + checker sur moodle fonctionalité manquante
