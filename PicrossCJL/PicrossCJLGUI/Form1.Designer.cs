@@ -32,6 +32,7 @@
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sauvegardezToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadFormBitmapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aProposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,6 +61,7 @@
             this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sauvegardezToolStripMenuItem,
             this.chargerToolStripMenuItem,
+            this.loadFormBitmapToolStripMenuItem,
             this.toolStripSeparator1,
             this.quitterToolStripMenuItem});
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
@@ -69,26 +71,33 @@
             // sauvegardezToolStripMenuItem
             // 
             this.sauvegardezToolStripMenuItem.Name = "sauvegardezToolStripMenuItem";
-            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.sauvegardezToolStripMenuItem.Text = "Save...";
             this.sauvegardezToolStripMenuItem.Click += new System.EventHandler(this.sauvegardezToolStripMenuItem_Click);
             // 
             // chargerToolStripMenuItem
             // 
             this.chargerToolStripMenuItem.Name = "chargerToolStripMenuItem";
-            this.chargerToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.chargerToolStripMenuItem.Text = "Load...";
+            this.chargerToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.chargerToolStripMenuItem.Text = "Load from xml...";
             this.chargerToolStripMenuItem.Click += new System.EventHandler(this.chargerToolStripMenuItem_Click);
+            // 
+            // loadFormBitmapToolStripMenuItem
+            // 
+            this.loadFormBitmapToolStripMenuItem.Name = "loadFormBitmapToolStripMenuItem";
+            this.loadFormBitmapToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.loadFormBitmapToolStripMenuItem.Text = "Load from bitmap...";
+            this.loadFormBitmapToolStripMenuItem.Click += new System.EventHandler(this.loadFormBitmapToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(106, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(176, 6);
             // 
             // quitterToolStripMenuItem
             // 
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.quitterToolStripMenuItem.Text = "Close";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
@@ -125,9 +134,9 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Location = new System.Drawing.Point(13, 37);
@@ -148,7 +157,6 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Picross CJL";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -170,6 +178,7 @@
         private DoubleBufferedPanel panel1;
         private System.Windows.Forms.ToolStripMenuItem solverToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem solveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadFormBitmapToolStripMenuItem;
 
 
     }

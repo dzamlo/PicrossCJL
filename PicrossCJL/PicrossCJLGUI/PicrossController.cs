@@ -9,6 +9,7 @@ namespace PicrossCJLGUI
 {
     class PicrossController
     {
+        #region Fields & Properties
         private PicrossPuzzle _puzzle;
 
         public PicrossPuzzle Puzzle
@@ -16,12 +17,16 @@ namespace PicrossCJLGUI
             get { return _puzzle; }
             set { _puzzle = value; }
         }
+        #endregion
 
+        #region Ctor
         public PicrossController()
         {
             this.Puzzle = PicrossPuzzle.Empty(4,4);
         }
+        #endregion
 
+        #region Methods
         public int GetNbMaxColumnsValues()
         {
             int maxValue = 0;
@@ -62,5 +67,6 @@ namespace PicrossCJLGUI
             PicrossSolver solver = new PicrossSolver();
             solver.Solve(this.Puzzle);
         }
+        #endregion
     }
 }

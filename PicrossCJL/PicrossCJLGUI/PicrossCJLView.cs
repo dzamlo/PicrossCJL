@@ -6,16 +6,11 @@
 
 using System;
 using System.Windows.Forms;
-using System.Xml.Serialization;
-using System.IO;
-using System.Xml;
 using System.Drawing;
 using PicrossCJL;
-using System.Text;
 
 namespace PicrossCJLGUI
 {
-
     /*TODO:
      * redimensionner panel + scrollbar
      * charger image
@@ -72,7 +67,7 @@ namespace PicrossCJLGUI
         {
             InitializeComponent();
             //g = panel1.CreateGraphics();
-           // g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
             this.Controller = new PicrossController();
             this.Draw();
@@ -126,16 +121,6 @@ namespace PicrossCJLGUI
         public void UpdateView()
         {
             this.Draw();
-        }
-
-        /// <summary>
-        /// On load form
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
 
         /// <summary>
@@ -238,6 +223,14 @@ namespace PicrossCJLGUI
         {
             this.Controller.Solve();
             this.UpdateView();
+        }
+
+        /// <summary>
+        /// On click on the "Load file" button in the menu. Open a bmp file.
+        /// </summary>
+        private void loadFormBitmapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
