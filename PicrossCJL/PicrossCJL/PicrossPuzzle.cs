@@ -40,9 +40,9 @@ namespace PicrossCJL
         #region Fields & Properties
         private CellValue[,] _cells;
         private int[][] _linesValues;
-        private int[] _nbCrossedByLines;
+        private int[] _nbFilledByLines;
         private int[][] _columnsValues;
-        protected int[] _nbCrossedByColumns;
+        protected int[] _nbFilledByColumns;
         private int _state;
 
         public int State
@@ -95,14 +95,14 @@ namespace PicrossCJL
             }
         }
 
-        public int[] NbCrossedByLines
+        public int[] NbFilledByLines
         {
-            get { return _nbCrossedByLines; }
+            get { return _nbFilledByLines; }
         }
 
-        public int[] NbCrossedByColumns
+        public int[] NbFilledByColumns
         {
-            get { return _nbCrossedByColumns; }
+            get { return _nbFilledByColumns; }
         }
         #endregion
 
@@ -112,7 +112,7 @@ namespace PicrossCJL
         /// </summary>
         /// <param name="puzzle"></param>
         public PicrossPuzzle(PicrossPuzzle puzzle)
-            : this(puzzle.Cells, puzzle.LinesValues, puzzle.ColumnsValues, puzzle._nbCrossedByLines, puzzle._nbCrossedByColumns)
+            : this(puzzle.Cells, puzzle.LinesValues, puzzle.ColumnsValues, puzzle._nbFilledByLines, puzzle._nbFilledByColumns)
         { } // No code
 
         /// <summary>
@@ -132,24 +132,24 @@ namespace PicrossCJL
             
 
             if (nbCrossedByLines != null)
-                _nbCrossedByLines = nbCrossedByLines;
+                _nbFilledByLines = nbCrossedByLines;
             else
             {
-                _nbCrossedByLines = new int[LinesValues.Length];
+                _nbFilledByLines = new int[LinesValues.Length];
                 for (int i = 0; i < LinesValues.Length; i++)
                 {
-                    _nbCrossedByLines[i] = LinesValues[i].Sum();
+                    _nbFilledByLines[i] = LinesValues[i].Sum();
                 }
             }
 
             if (nbCrossedByColumns != null)
-                _nbCrossedByColumns = nbCrossedByColumns;
+                _nbFilledByColumns = nbCrossedByColumns;
             else
             {
-                _nbCrossedByColumns = new int[ColumnsValues.Length];
+                _nbFilledByColumns = new int[ColumnsValues.Length];
                 for (int i = 0; i < ColumnsValues.Length; i++)
                 {
-                    _nbCrossedByColumns[i] = ColumnsValues[i].Sum();
+                    _nbFilledByColumns[i] = ColumnsValues[i].Sum();
                 }
             }
         }
@@ -609,7 +609,7 @@ namespace PicrossCJL
         /// <summary>
         /// Method to check a line
         /// </summary>
-        /// <param name="lineNo">Number of the line (integer)</param>
+        /// <param name="columnNo">Number of the line (integer)</param>
         /// <returns>PuzzleState enum</returns>
         public PuzzleState CheckPuzzleLine(int lineNo)
         {
@@ -647,7 +647,7 @@ namespace PicrossCJL
                 }
             }
 
-            if (nbFilled > _nbCrossedByLines[lineNo] || nbCrossed > w - _nbCrossedByLines[lineNo])
+            if (nbFilled > _nbFilledByLines[lineNo] || nbCrossed > w - _nbFilledByLines[lineNo])
                 return PuzzleState.Incorrect;
 
 
@@ -724,7 +724,7 @@ namespace PicrossCJL
                 }
             }
 
-            if (nbFilled > _nbCrossedByColumns[columnNo] || nbCrossed > h - _nbCrossedByColumns[columnNo])
+            if (nbFilled > _nbFilledByColumns[columnNo] || nbCrossed > h - _nbFilledByColumns[columnNo])
                 return PuzzleState.Incorrect;
 
             if (currentRunLength > 0)
