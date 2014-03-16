@@ -22,7 +22,7 @@ namespace PicrossCJL
     public class PicrossPuzzle
     {
         #region Enums
-        public enum CellValue
+        public enum CellValue : byte
         {
             Empty,
             Filled,
