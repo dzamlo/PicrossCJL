@@ -254,8 +254,6 @@ namespace PicrossCJLGUI
                     y * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, 5, PIXEL_PER_DIGIT));
             }
             #endregion
-
-
         }
 
         /// <summary>
