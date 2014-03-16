@@ -40,7 +40,7 @@ namespace PicrossCJL
         #region Fields & Properties
         private CellValue[,] _cells;
         private int[][] _linesValues;
-        protected int[] _nbCrossedByLines;
+        private int[] _nbCrossedByLines;
         private int[][] _columnsValues;
         protected int[] _nbCrossedByColumns;
         private int _state;
@@ -93,6 +93,16 @@ namespace PicrossCJL
                 // GetLength(0) -> width, GetLenght(1) -> height
                 return new Size(Width, Height);
             }
+        }
+
+        public int[] NbCrossedByLines
+        {
+            get { return _nbCrossedByLines; }
+        }
+
+        public int[] NbCrossedByColumns
+        {
+            get { return _nbCrossedByColumns; }
         }
         #endregion
 
