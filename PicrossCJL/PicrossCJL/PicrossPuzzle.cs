@@ -13,7 +13,6 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Drawing.Imaging;
 using System.Xml;
 
 namespace PicrossCJL
@@ -157,23 +156,35 @@ namespace PicrossCJL
         /// <summary>
         /// PicrossPuzzle Constructor
         /// </summary>
-        /// <param name="filename"></param>
-        public PicrossPuzzle(string filename)
-        {
-
-        }
-
-        /// <summary>
-        /// PicrossPuzzle Constructor
-        /// </summary>
         /// <param name="img"></param>
         /// <param name="size"></param>
-        public PicrossPuzzle(Bitmap img, Size? size = null, int threshold = 128)
+        public PicrossPuzzle(Bitmap img, Size? size = null, int threshold = 128, int[] nbCrossedByLines = null, int[] nbCrossedByColumns = null)
         {
             this.Cells = new CellValue[img.Width, img.Height];
-            //this.Cells = this.BitmapToCellsValueArray(img, 128); // To show the solution on the screen
             this.LinesValues = this.BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
             this.ColumnsValues = this.BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
+
+            if (nbCrossedByLines != null)
+                _nbFilledByLines = nbCrossedByLines;
+            else
+            {
+                _nbFilledByLines = new int[LinesValues.Length];
+                for (int i = 0; i < LinesValues.Length; i++)
+                {
+                    _nbFilledByLines[i] = LinesValues[i].Sum();
+                }
+            }
+
+            if (nbCrossedByColumns != null)
+                _nbFilledByColumns = nbCrossedByColumns;
+            else
+            {
+                _nbFilledByColumns = new int[ColumnsValues.Length];
+                for (int i = 0; i < ColumnsValues.Length; i++)
+                {
+                    _nbFilledByColumns[i] = ColumnsValues[i].Sum();
+                }
+            }
         }
 
         /// <summary>

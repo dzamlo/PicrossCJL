@@ -150,6 +150,7 @@ namespace PicrossCJLGUI
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             g.Clear(BACKGROUND_COLOR);
             CellsRectangle = new Rectangle[this.Controller.GetCellSize().Width, this.Controller.GetCellSize().Height];
+            Brush stateColumnColor, stateLineColor;
 
             #region Draw columns values
             // Draw columns rectangles & values
@@ -212,8 +213,49 @@ namespace PicrossCJLGUI
                         default: break;
                     }
                 }
+
+                
+                switch (this.Controller.Puzzle.CheckPuzzleColumn(x))
+                {
+                    case PicrossPuzzle.PuzzleState.Finished:
+                        stateColumnColor = Brushes.Green;
+                        break;
+                    case PicrossPuzzle.PuzzleState.Incomplete:
+                        stateColumnColor = Brushes.Yellow;
+                        break;
+                    case PicrossPuzzle.PuzzleState.Incorrect:
+                        stateColumnColor = Brushes.Red;
+                        break;
+                    default: stateColumnColor = Brushes.Red; break;
+                }
+                // Draw the states of the columns (Red incorrect, Yellow incomplete, Green correct)
+                g.FillRectangle(stateColumnColor, new Rectangle(x * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxLinesValues() * PIXEL_PER_DIGIT, 
+                    this.Controller.GetCellSize().Height * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, PIXEL_PER_DIGIT, 5));
+            }
+
+
+            for (int y = 0; y < this.Controller.GetCellSize().Height; y++)
+            {
+                switch (this.Controller.Puzzle.CheckPuzzleLine(y))
+                {
+                    case PicrossPuzzle.PuzzleState.Finished:
+                        stateLineColor = Brushes.Green;
+                        break;
+                    case PicrossPuzzle.PuzzleState.Incomplete:
+                        stateLineColor = Brushes.Yellow;
+                        break;
+                    case PicrossPuzzle.PuzzleState.Incorrect:
+                        stateLineColor = Brushes.Red;
+                        break;
+                    default: stateLineColor = Brushes.Red; break;
+                }
+                // Draw the states of the lines (Red incorrect, Yellow incomplete, Green correct)
+                g.FillRectangle(stateLineColor, new Rectangle((this.Controller.GetCellSize().Width + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT,
+                    y * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, 5, PIXEL_PER_DIGIT));
             }
             #endregion
+
+
         }
 
         /// <summary>
