@@ -125,7 +125,7 @@
             // 
             // ofd
             // 
-            this.ofd.Filter = "Fichiers XML|*.xml|Fichiers non|*.non;*.txt";
+            this.ofd.Filter = "Fichiers XML|*.xml|Fichiers non|*.non;*.txt|Fichiers BMP|*.bmp";
             // 
             // sfd
             // 
