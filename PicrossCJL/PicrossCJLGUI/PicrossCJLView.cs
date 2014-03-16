@@ -12,8 +12,6 @@ using PicrossCJL;
 namespace PicrossCJLGUI
 {
     /*TODO:
-     * redimensionner panel + scrollbar
-     * charger image
      * indiquer ligne/colomne (in)correcte et/ou puzzle terminé
      * intégrer solver dans GUI, backgroudworker ?
      * pour l'instant un seul chiffre des linesValue et columnsValue sont afficher, par example 2 au lieu de 20 su l'exemple 20x20
@@ -29,7 +27,7 @@ namespace PicrossCJLGUI
     public partial class Form1 : Form
     {
         #region Constants
-        const int PIXEL_PER_DIGIT = 20;
+        const int PIXEL_PER_DIGIT = 15;
         const int MARGIN_TOP_LEFT = 2;
         const string FONT_NAME = "Comic Sans Ms"; // RC: Comic Sans MS... really ?
         #endregion
@@ -101,10 +99,13 @@ namespace PicrossCJLGUI
         /// </summary>
         private void chargerToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.ofd.Filter = "Fichiers XML|*.xml|Fichiers non|*.non;*.txt";
             if (ofd.ShowDialog() == DialogResult.OK)
                 this.Controller.LoadFromFile(ofd.FileName);
 
             this.UpdateView();
+
+            // Auto resize the view
             this.Width = (this.Controller.GetCellSize().Width + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + 60;
             this.Height = (this.Controller.GetCellSize().Height + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + 100;
         }
@@ -215,7 +216,7 @@ namespace PicrossCJLGUI
            for (int x = 0; x < this.Controller.GetCellSize().Width; x++)
                 for (int y = 0; y < this.Controller.GetCellSize().Height; y++)
                     if (CellsRectangle[x, y].Contains(e.Location))
-                        this.Controller.Puzzle.Cells[y, x] = (PicrossPuzzle.CellValue)(((int)this.Controller.Puzzle.Cells[y, x] + 1) % 3);
+                        this.Controller.Puzzle.Cells[x, y] = (PicrossPuzzle.CellValue)(((int)this.Controller.Puzzle.Cells[x, y] + 1) % 3);
 
            this.UpdateView();
         }
@@ -237,7 +238,15 @@ namespace PicrossCJLGUI
         /// </summary>
         private void loadFormBitmapToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ofd.Filter = "Fichiers Bitmap|*.bmp";
+            if (ofd.ShowDialog() == DialogResult.OK)
+                this.Controller.LoadFromBitmap(ofd.FileName);
 
+            this.UpdateView();
+
+            // Auto resize the view
+            this.Width = (this.Controller.GetCellSize().Width + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + 60;
+            this.Height = (this.Controller.GetCellSize().Height + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + 100;
         }
         #endregion
     }
