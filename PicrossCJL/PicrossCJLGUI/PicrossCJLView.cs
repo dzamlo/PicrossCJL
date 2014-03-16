@@ -30,7 +30,11 @@ namespace PicrossCJLGUI
         const int PIXEL_PER_DIGIT = 15;
         const int MARGIN_TOP_LEFT = 2;
         const string FONT_NAME = "Arial";
-        const int FONT_SIZE = 9;
+        const int FONT_SIZE = 8;
+        private readonly Brush CELL_COLOR = Brushes.White;
+        private readonly Color BACKGROUND_COLOR = Color.CornflowerBlue;
+        private readonly Brush BACKGROUND_VALUES_ODD = Brushes.MediumBlue;
+        private readonly Brush BACKGROUND_VALUES_EVEN = Brushes.RoyalBlue;
         #endregion
 
         #region Fields & Properties
@@ -145,38 +149,42 @@ namespace PicrossCJLGUI
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            g.Clear(Color.CornflowerBlue);
+            g.Clear(BACKGROUND_COLOR);
             CellsRectangle = new Rectangle[this.Controller.GetCellSize().Width, this.Controller.GetCellSize().Height];
 
             #region Draw columns values
             // Draw columns rectangles & values
             for (int i = 0; i < this.Controller.Puzzle.ColumnsValues.GetLength(0); i++)
             {
-                for (int j = 0; j < this.Controller.Puzzle.ColumnsValues[i].Length; j++)
+                for (int j = 0; j < this.Controller.Puzzle.ColumnsValues[i].Length; j++)                   
                 {
-                    Brush b = (i % 2 == 0) ? Brushes.RoyalBlue : Brushes.MediumBlue;
-                    g.FillRectangle(b, new Rectangle((i + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                    Brush b = (i % 2 == 0) ? BACKGROUND_VALUES_EVEN : BACKGROUND_VALUES_ODD;
+                    int posX = (i + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
+                    int posY = (this.Controller.GetNbMaxColumnsValues() - j - 1) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
+
+                    g.FillRectangle(b, new Rectangle(posX, posY, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
                     g.DrawString(this.Controller.Puzzle.ColumnsValues[i][j].ToString(),
                         new Font(FONT_NAME, FONT_SIZE),
-                        Brushes.White,
-                        new RectangleF((i + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                        Brushes.White, posX, posY);
                 }
             }
             #endregion
-
+            
             #region Draw lines values
             // Draw lines rectangles & values
             for (int i = 0; i < this.Controller.Puzzle.LinesValues.GetLength(0); i++)
             {
                 for (int j = 0; j < this.Controller.Puzzle.LinesValues[i].Length; j++)
                 {
-                    Brush b = (i % 2 == 0) ? Brushes.RoyalBlue : Brushes.MediumBlue;
-                    g.FillRectangle(b, new Rectangle(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
-
+                    Brush b = (i % 2 == 0) ? BACKGROUND_VALUES_EVEN : BACKGROUND_VALUES_ODD;
+                    int posX = (this.Controller.GetNbMaxLinesValues() - j - 1) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
+                    int posY = (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
+                    
+                    g.FillRectangle(b, new Rectangle(posX, posY, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
                     g.DrawString(this.Controller.Puzzle.LinesValues[i][j].ToString(),
                         new Font(FONT_NAME, FONT_SIZE),
-                        Brushes.White,
-                        new RectangleF(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                        Brushes.White, posX, posY);
+                        //new RectangleF(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
                 }
             }
             #endregion
@@ -192,11 +200,10 @@ namespace PicrossCJLGUI
                     switch (this.Controller.GetCellState(x, y))
                     {
                         case PicrossPuzzle.CellValue.Empty:
-                            //g.DrawRectangle(Pens.Black, r);
-                            g.FillRectangle(Brushes.White, r);
+                            g.FillRectangle(CELL_COLOR, r);
                             break;
                         case PicrossPuzzle.CellValue.Crossed:
-                            g.FillRectangle(Brushes.White, r);
+                            g.FillRectangle(CELL_COLOR, r);
                             g.DrawLine(Pens.Black, new Point(r.Left, r.Top), new Point(r.Right, r.Bottom));
                             g.DrawLine(Pens.Black, new Point(r.Right, r.Top), new Point(r.Left, r.Bottom));
                             break;
