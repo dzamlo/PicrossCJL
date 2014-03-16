@@ -66,9 +66,10 @@ namespace PicrossCJLGUI
             InitializeComponent();
             //g = panel1.CreateGraphics();
             //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-
+            
             this.Controller = new PicrossController();
             this.Draw();
+            MessageBox.Show("Please load a PiCross from a Bitmap or an Xml file.");
         }
         #endregion
 
@@ -189,7 +190,7 @@ namespace PicrossCJLGUI
                     switch (this.Controller.GetCellState(x, y))
                     {
                         case PicrossPuzzle.CellValue.Empty:
-                            g.DrawRectangle(Pens.Red, r);
+                            g.DrawRectangle(Pens.Black, r);
                             break;
                         case PicrossPuzzle.CellValue.Crossed:
                             g.DrawRectangle(Pens.Red, r);
@@ -197,7 +198,7 @@ namespace PicrossCJLGUI
                             g.DrawLine(Pens.Black, new Point(r.Right, r.Top), new Point(r.Left, r.Bottom));
                             break;
                         case PicrossPuzzle.CellValue.Filled:
-                            g.FillRectangle(Brushes.Red, r);
+                            g.FillRectangle(Brushes.Black, r);
                             break;
                         default: break;
                     }
