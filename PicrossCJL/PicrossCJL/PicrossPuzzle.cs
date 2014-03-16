@@ -161,8 +161,8 @@ namespace PicrossCJL
         public PicrossPuzzle(Bitmap img, Size? size = null, int threshold = 128, int[] nbCrossedByLines = null, int[] nbCrossedByColumns = null)
         {
             this.Cells = new CellValue[img.Width, img.Height];
-            this.LinesValues = this.BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
-            this.ColumnsValues = this.BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
+            this.LinesValues = BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
+            this.ColumnsValues = BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
 
             if (nbCrossedByLines != null)
                 _nbFilledByLines = nbCrossedByLines;
@@ -185,6 +185,16 @@ namespace PicrossCJL
                     _nbFilledByColumns[i] = ColumnsValues[i].Sum();
                 }
             }
+        }
+
+        public static PicrossPuzzle FromBitmap(Bitmap img, Size? size = null, int threshold = 128)
+        {
+            img = (size.HasValue) ? new Bitmap(img, (Size)size) : img;
+            int [][] LinesValues = BitmapToLinesValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
+            int [][] ColumnsValues = BitmapToColumnsValue((size.HasValue) ? new Bitmap(img, (Size)size) : img, threshold);
+
+            return new PicrossPuzzle(null, LinesValues, ColumnsValues);
+
         }
 
         /// <summary>
@@ -275,18 +285,18 @@ namespace PicrossCJL
         /// <param name="bmp">Bitmap image</param>
         /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
         /// <returns>2D CellValue array</returns>
-        private CellValue[,] BitmapToCellsValueArray(Bitmap bmp, int threshold)
+        private static CellValue[,] BitmapToCellsValueArray(Bitmap bmp, int threshold)
         {
             int average = 0;
             Color c;
-            CellValue[,] cells = new CellValue[bmp.Width, bmp.Height];
+            CellValue[,] cells = new CellValue[bmp.Height, bmp.Width];
             for (int y = 0; y < bmp.Height; y++)
             {
                 for (int x = 0; x < bmp.Width; x++)
                 {
                     c = bmp.GetPixel(x, y);
                     average = (c.R + c.G + c.B) / 3;
-                    cells[x, y] = (average <= threshold) ? CellValue.Filled : CellValue.Empty;
+                    cells[y, x] = (average <= threshold) ? CellValue.Filled : CellValue.Empty;
                 }
             }
             return cells;
@@ -300,24 +310,24 @@ namespace PicrossCJL
         /// <param name="bmp">Bitmap image</param>
         /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
         /// <returns>2D integer array</returns>
-        public int[][] BitmapToLinesValue(Bitmap bmp, int threshold)
+        public static  int[][] BitmapToLinesValue(Bitmap bmp, int threshold)
         {
-            CellValue[,] cells = this.BitmapToCellsValueArray(bmp, threshold);
+            CellValue[,] cells = BitmapToCellsValueArray(bmp, threshold);
             int currentValue = 0;
-            int[][] linesValues = new int[cells.GetLength(1)][];
+            int[][] linesValues = new int[cells.GetLength(0)][];
             List<int> values = new List<int>();
 
-            for (int y = 0; y < cells.GetLength(1); y++)
+            for (int y = 0; y < cells.GetLength(0); y++)
             {
-                for (int x = 0; x < cells.GetLength(0); x++)
+                for (int x = 0; x < cells.GetLength(1); x++)
                 {
-                    if (cells[x, y] != CellValue.Filled)
+                    if (cells[y,x] != CellValue.Filled)
                     {
                         if (currentValue > 0) values.Add(currentValue);
                         currentValue = 0;
                     }
                     else
-                        currentValue += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+                        currentValue += (cells[y, x] == CellValue.Filled) ? 1 : 0;
 
                 }
                 if (currentValue > 0) values.Add(currentValue);
@@ -337,20 +347,20 @@ namespace PicrossCJL
         public int[][] BitmapToLinesValue(CellValue[,] cells)
         {
             int currentValue = 0;
-            int[][] linesValues = new int[cells.GetLength(1)][];
+            int[][] linesValues = new int[cells.GetLength(0)][];
             List<int> values = new List<int>();
             
-            for (int y = 0; y < cells.GetLength(1); y++)
+            for (int y = 0; y < cells.GetLength(0); y++)
             {
-                for (int x = 0; x < cells.GetLength(0); x++)
+                for (int x = 0; x < cells.GetLength(1); x++)
                 {
-                    if (cells[x, y] != CellValue.Filled)
+                    if (cells[y, x] != CellValue.Filled)
                     {
                         if(currentValue > 0) values.Add(currentValue);
                         currentValue = 0;
                     }
                     else
-                        currentValue += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+                        currentValue += (cells[y, x] == CellValue.Filled) ? 1 : 0;
 
                 }
                 if (currentValue > 0) values.Add(currentValue);
@@ -368,24 +378,24 @@ namespace PicrossCJL
         /// <param name="bmp">Bitmap image</param>
         /// <param name="threshold">Threashold value (integer) to determine if the value is Filled or not</param>
         /// <returns>2D integer array</returns>
-        public int[][] BitmapToColumnsValue(Bitmap bmp, int threshold)
+        public static int[][] BitmapToColumnsValue(Bitmap bmp, int threshold)
         {
-            CellValue[,] cells = this.BitmapToCellsValueArray(bmp, threshold);
+            CellValue[,] cells = BitmapToCellsValueArray(bmp, threshold);
             int currentValue = 0;
-            int[][] columnsValues = new int[cells.GetLength(0)][];
+            int[][] columnsValues = new int[cells.GetLength(1)][];
             List<int> values = new List<int>();
 
-            for (int x = 0; x < cells.GetLength(0); x++)
+            for (int x = 0; x < cells.GetLength(1); x++)
             {
-                for (int y = 0; y < cells.GetLength(1); y++)
+                for (int y = 0; y < cells.GetLength(0); y++)
                 {
-                    if (cells[x, y] != CellValue.Filled)
+                    if (cells[y, x] != CellValue.Filled)
                     {
                         if (currentValue > 0) values.Add(currentValue);
                         currentValue = 0;
                     }
                     else
-                        currentValue += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+                        currentValue += (cells[y, x] == CellValue.Filled) ? 1 : 0;
 
                 }
                 if (currentValue > 0) values.Add(currentValue);
@@ -412,13 +422,13 @@ namespace PicrossCJL
             {
                 for (int y = 0; y < cells.GetLength(1); y++)
                 {
-                    if (cells[x, y] != CellValue.Filled)
+                    if (cells[y, x] != CellValue.Filled)
                     {
                         if (currentValue > 0) values.Add(currentValue);
                         currentValue = 0;
                     }
                     else
-                        currentValue += (cells[x, y] == CellValue.Filled) ? 1 : 0;
+                        currentValue += (cells[y, x] == CellValue.Filled) ? 1 : 0;
 
                 }
                 if (currentValue > 0) values.Add(currentValue);

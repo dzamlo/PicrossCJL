@@ -45,12 +45,12 @@ namespace PicrossCJLGUI
 
         public Size GetCellSize()
         {
-            return new Size(this.Puzzle.Cells.GetLength(0), this.Puzzle.Cells.GetLength(1));
+            return Puzzle.Size;
         }
 
         public PicrossPuzzle.CellValue GetCellState(int x, int y)
         {
-            return this.Puzzle.Cells[x, y];
+            return this.Puzzle.Cells[y, x];
         }
 
         public void LoadFromFile(string filename)
@@ -64,7 +64,7 @@ namespace PicrossCJLGUI
         public void LoadFromBitmap(string filename)
         {
             Bitmap bmp = new Bitmap(filename);
-            this.Puzzle = new PicrossPuzzle(bmp, bmp.Size, 128);
+            this.Puzzle = PicrossPuzzle.FromBitmap(bmp);
         }
 
         internal void Solve()

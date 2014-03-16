@@ -268,7 +268,7 @@ namespace PicrossCJLGUI
            for (int x = 0; x < this.Controller.GetCellSize().Width; x++)
                 for (int y = 0; y < this.Controller.GetCellSize().Height; y++)
                     if (CellsRectangle[x, y].Contains(e.Location))
-                        this.Controller.Puzzle.Cells[x, y] = (PicrossPuzzle.CellValue)(((int)this.Controller.Puzzle.Cells[x, y] + 1) % 3);
+                        this.Controller.Puzzle.Cells[y, x] = (PicrossPuzzle.CellValue)(((int)this.Controller.Puzzle.Cells[y, x] + 1) % 3);
 
            this.UpdateView();
         }
