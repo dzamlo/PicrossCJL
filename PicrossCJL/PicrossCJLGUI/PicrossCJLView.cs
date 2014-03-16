@@ -160,7 +160,7 @@ namespace PicrossCJLGUI
                 {
                     Brush b = (i % 2 == 0) ? BACKGROUND_VALUES_EVEN : BACKGROUND_VALUES_ODD;
                     int posX = (i + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
-                    int posY = (this.Controller.GetNbMaxColumnsValues() - j - 1) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
+                    int posY = (this.Controller.GetNbMaxColumnsValues() - (this.Controller.Puzzle.ColumnsValues[i].Length - j - 1) - 1) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
 
                     g.FillRectangle(b, new Rectangle(posX, posY, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
                     g.DrawString(this.Controller.Puzzle.ColumnsValues[i][j].ToString(),
@@ -177,7 +177,7 @@ namespace PicrossCJLGUI
                 for (int j = 0; j < this.Controller.Puzzle.LinesValues[i].Length; j++)
                 {
                     Brush b = (i % 2 == 0) ? BACKGROUND_VALUES_EVEN : BACKGROUND_VALUES_ODD;
-                    int posX = (this.Controller.GetNbMaxLinesValues() - j - 1) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
+                    int posX = (this.Controller.GetNbMaxLinesValues() - (this.Controller.Puzzle.LinesValues[i].Length - j -1) - 1) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
                     int posY = (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
                     
                     g.FillRectangle(b, new Rectangle(posX, posY, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
