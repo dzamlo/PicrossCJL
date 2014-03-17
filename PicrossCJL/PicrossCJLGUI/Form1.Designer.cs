@@ -134,14 +134,12 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new System.Drawing.Point(13, 37);
+            this.panel1.Location = new System.Drawing.Point(0, 37);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(209, 163);
+            this.panel1.Size = new System.Drawing.Size(234, 175);
             this.panel1.TabIndex = 2;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             this.panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
@@ -158,6 +156,7 @@
             this.MinimumSize = new System.Drawing.Size(250, 250);
             this.Name = "Form1";
             this.Text = "Picross CJL";
+            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

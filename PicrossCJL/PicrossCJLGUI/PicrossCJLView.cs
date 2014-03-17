@@ -40,11 +40,12 @@ namespace PicrossCJLGUI
         private Rectangle[,] _cells;
         //private Graphics g;
         private PicrossController _controller;
-        
+
 
         public Rectangle[,] CellsRectangle
         {
-            get {
+            get
+            {
                 if (_cells == null)
                     _cells = new Rectangle[12, 12];
                 return _cells;
@@ -70,10 +71,9 @@ namespace PicrossCJLGUI
             InitializeComponent();
             //g = panel1.CreateGraphics();
             //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            
+
             this.Controller = new PicrossController();
             this.Draw();
-            MessageBox.Show("Please load a PiCross from a Bitmap or an Xml file.");
         }
         #endregion
 
@@ -110,9 +110,7 @@ namespace PicrossCJLGUI
 
             this.UpdateView();
 
-            // Auto resize the view
-            this.Width = (this.Controller.GetCellSize().Width + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + 60;
-            this.Height = (this.Controller.GetCellSize().Height + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + 100;
+            ResizeOnPuzzleChange();
         }
 
         /// <summary>
@@ -156,7 +154,7 @@ namespace PicrossCJLGUI
             // Draw columns rectangles & values
             for (int i = 0; i < this.Controller.Puzzle.ColumnsValues.GetLength(0); i++)
             {
-                for (int j = 0; j < this.Controller.Puzzle.ColumnsValues[i].Length; j++)                   
+                for (int j = 0; j < this.Controller.Puzzle.ColumnsValues[i].Length; j++)
                 {
                     Brush b = (i % 2 == 0) ? BACKGROUND_VALUES_EVEN : BACKGROUND_VALUES_ODD;
                     int posX = (i + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
@@ -169,7 +167,7 @@ namespace PicrossCJLGUI
                 }
             }
             #endregion
-            
+
             #region Draw lines values
             // Draw lines rectangles & values
             for (int i = 0; i < this.Controller.Puzzle.LinesValues.GetLength(0); i++)
@@ -177,14 +175,14 @@ namespace PicrossCJLGUI
                 for (int j = 0; j < this.Controller.Puzzle.LinesValues[i].Length; j++)
                 {
                     Brush b = (i % 2 == 0) ? BACKGROUND_VALUES_EVEN : BACKGROUND_VALUES_ODD;
-                    int posX = (this.Controller.GetNbMaxLinesValues() - (this.Controller.Puzzle.LinesValues[i].Length - j -1) - 1) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
+                    int posX = (this.Controller.GetNbMaxLinesValues() - (this.Controller.Puzzle.LinesValues[i].Length - j - 1) - 1) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
                     int posY = (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT;
-                    
+
                     g.FillRectangle(b, new Rectangle(posX, posY, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
                     g.DrawString(this.Controller.Puzzle.LinesValues[i][j].ToString(),
                         new Font(FONT_NAME, FONT_SIZE),
                         Brushes.White, posX, posY);
-                        //new RectangleF(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
+                    //new RectangleF(j * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, (i + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT, PIXEL_PER_DIGIT, PIXEL_PER_DIGIT));
                 }
             }
             #endregion
@@ -214,7 +212,7 @@ namespace PicrossCJLGUI
                     }
                 }
 
-                
+
                 switch (this.Controller.Puzzle.CheckPuzzleColumn(x))
                 {
                     case PicrossPuzzle.PuzzleState.Finished:
@@ -229,7 +227,7 @@ namespace PicrossCJLGUI
                     default: stateColumnColor = Brushes.Red; break;
                 }
                 // Draw the states of the columns (Red incorrect, Yellow incomplete, Green correct)
-                g.FillRectangle(stateColumnColor, new Rectangle(x * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxLinesValues() * PIXEL_PER_DIGIT, 
+                g.FillRectangle(stateColumnColor, new Rectangle(x * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxLinesValues() * PIXEL_PER_DIGIT,
                     this.Controller.GetCellSize().Height * PIXEL_PER_DIGIT + MARGIN_TOP_LEFT + this.Controller.GetNbMaxColumnsValues() * PIXEL_PER_DIGIT, PIXEL_PER_DIGIT, 5));
             }
 
@@ -263,14 +261,14 @@ namespace PicrossCJLGUI
         /// <param name="e"></param>
         private void panel1_MouseClick(object sender, MouseEventArgs e)
         {
-           for (int x = 0; x < this.Controller.GetCellSize().Width; x++)
+            for (int x = 0; x < this.Controller.GetCellSize().Width; x++)
                 for (int y = 0; y < this.Controller.GetCellSize().Height; y++)
                     if (CellsRectangle[x, y].Contains(e.Location))
                         this.Controller.Puzzle.Cells[y, x] = (PicrossPuzzle.CellValue)(((int)this.Controller.Puzzle.Cells[y, x] + 1) % 3);
 
-           this.UpdateView();
+            this.UpdateView();
         }
-        
+
 
         /// <summary>
         /// Method to solve the picross
@@ -294,10 +292,24 @@ namespace PicrossCJLGUI
 
             this.UpdateView();
 
+            ResizeOnPuzzleChange();
+        }
+
+        private void ResizeOnPuzzleChange()
+        {
             // Auto resize the view
+            this.panel1.Width = (this.Controller.GetCellSize().Width + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + 60;
+            this.panel1.Height = (this.Controller.GetCellSize().Height + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + 100;
+
             this.Width = (this.Controller.GetCellSize().Width + this.Controller.GetNbMaxLinesValues()) * PIXEL_PER_DIGIT + 60;
             this.Height = (this.Controller.GetCellSize().Height + this.Controller.GetNbMaxColumnsValues()) * PIXEL_PER_DIGIT + 100;
+
         }
         #endregion
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            MessageBox.Show("Please load a PiCross from a Bitmap or an Xml file.");
+        }
     }
 }
