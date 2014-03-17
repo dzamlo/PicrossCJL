@@ -68,13 +68,6 @@
             this.fichierToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fichierToolStripMenuItem.Text = "File";
             // 
-            // sauvegardezToolStripMenuItem
-            // 
-            this.sauvegardezToolStripMenuItem.Name = "sauvegardezToolStripMenuItem";
-            this.sauvegardezToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.sauvegardezToolStripMenuItem.Text = "Save...";
-            this.sauvegardezToolStripMenuItem.Click += new System.EventHandler(this.sauvegardezToolStripMenuItem_Click);
-            // 
             // chargerToolStripMenuItem
             // 
             this.chargerToolStripMenuItem.Name = "chargerToolStripMenuItem";

@@ -78,17 +78,6 @@ namespace PicrossCJLGUI
         #endregion
 
         #region Methods
-        /// <summary>
-        /// On click on the "Save file" button in the menu. Save the file.
-        /// </summary>
-        private void sauvegardezToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                //save file - Call Puzzle.Save()
-
-            }
-        }
 
         /// <summary>
         /// On click on the "Close" button in the menu. Exit the application
