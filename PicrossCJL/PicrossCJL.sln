@@ -1,14 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicrossCJL", "PicrossCJL\PicrossCJL.csproj", "{7778D691-143E-4C28-81C6-A9627971EDBE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicrossCJLGUI", "PicrossCJLGUI\PicrossCJLGUI.csproj", "{F23884FD-D0E6-4CC4-AFC9-68BD86ECCD1C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicrossSolverCLI", "PicrossSolverCLI\PicrossSolverCLI.csproj", "{D565B314-EA93-4B64-8DB1-4C10EE866DFC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPicrossPuzzle", "TestPicrossPuzzle\TestPicrossPuzzle.csproj", "{8DAC8D63-B3E5-43D3-9851-D37F037F4A74}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F1573FF-B6C7-4A51-8DA3-E206E89EE366}"
 	ProjectSection(SolutionItems) = preProject
 		PicrossSolverCLI\bmp_test_picross.bmp = PicrossSolverCLI\bmp_test_picross.bmp
@@ -19,6 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 		PicrossSolverCLI\tux.bmp = PicrossSolverCLI\tux.bmp
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicrossCJL", "PicrossCJL\PicrossCJL.csproj", "{7778D691-143E-4C28-81C6-A9627971EDBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicrossCJLGUI", "PicrossCJLGUI\PicrossCJLGUI.csproj", "{F23884FD-D0E6-4CC4-AFC9-68BD86ECCD1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicrossSolverCLI", "PicrossSolverCLI\PicrossSolverCLI.csproj", "{D565B314-EA93-4B64-8DB1-4C10EE866DFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPicrossPuzzle", "TestPicrossPuzzle\TestPicrossPuzzle.csproj", "{8DAC8D63-B3E5-43D3-9851-D37F037F4A74}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
